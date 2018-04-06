@@ -9,6 +9,8 @@
 #include <vector>
 #include "Environment.h"
 
+using namespace std;
+
 class Agent {
     vector<double> qValues;
     Environment environment;
@@ -30,8 +32,10 @@ private:
     class QValues {
         vector<vector<double>> qValues;
     public:
-        double operator [] (tuple<int,int> i) {
-            return qValues[i.first][i.second];
+        double operator[](tuple<int, int> i) {
+            //@todo schauen ob caro da nen Schmarrn geschrieben hat mit get<0>(i)...
+            return qValues[get<0>(i)][get<1>(i)];
+            //return qValues[i.first][i.second];
         }
 
     };
@@ -41,6 +45,8 @@ private:
     int choseAction(Environment::Response response);
 
     void playGame();
+
+    double maxExpected();
 };
 
 

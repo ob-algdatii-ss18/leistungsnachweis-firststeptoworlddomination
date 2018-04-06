@@ -8,6 +8,8 @@
 #include <vector>
 #include <tuple>
 
+using namespace std;
+
 class Environment {
     vector<vector<vector<int>>> gameRecord; //the game is stored here as a replay
     vector<vector<int>> playingGround; //current play ground
@@ -15,11 +17,11 @@ class Environment {
 
 
 public:
-    static tuple<int,int> gameSize;
+    static tuple<int, int> gameSize;
 
-    class Response{
+    class Response {
     public:
-        tuple<int,int> state; //game state
+        tuple<int, int> state; //game state
         vector<int> options; //vector of all possible actions
         int reward; //reward earned
         bool finished = false; //indicates if game is over

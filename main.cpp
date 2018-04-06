@@ -6,7 +6,7 @@ using namespace std;
 
 int main() {
     cout << "Hello, World!" << std::endl;
-    Agent a = Agent();
+    Agent a = Agent(0.1,0.1);
     a.test();
     return 0;
 }

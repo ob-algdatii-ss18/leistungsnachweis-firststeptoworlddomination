@@ -4,7 +4,10 @@
 
 #include "Environment.h"
 
-std::tuple<int, int> Environment::initialState() {
-    return tuple(0,0);
+using namespace std;
+
+tuple<int, int> Environment::initialState() {
+    //  return tuple(0,0);
+    return {0, 0};
 }
 

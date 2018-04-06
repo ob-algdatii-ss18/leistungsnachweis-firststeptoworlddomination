@@ -1,7 +1,7 @@
 //
 // Created by jonas on 4/4/18.
 //
-
+#include <vector>
 #include "Agent.h"
 
 using namespace std;
@@ -11,7 +11,7 @@ void Agent::test() {
 }
 
 void Agent::fit(int numberOfGames) {
-    for(int i = 0; i < numberOfGames; i++) {
+    for (int i = 0; i < numberOfGames; i++) {
         environment = Environment();
         currentState = environment.initialState();
         playGame();
@@ -28,7 +28,7 @@ void Agent::playGame() {
     bool finished = false;
     int nextAction = 0;
 
-    while(!finished) {
+    while (!finished) {
         Environment::Response response = environment.step(nextAction);
         updateQValues(response);
         nextAction = choseAction(response);
@@ -39,5 +39,10 @@ void Agent::playGame() {
 
 void Agent::updateQValues(Environment::Response response) {
     double q = qValues[currentState];
-    q += learningRate*(response.reward + greedyRate*maxExpected())-q;
+    q += learningRate * (response.reward + greedyRate * maxExpected()) - q;
+}
+
+//@todo implement maxExpected()
+double Agent::maxExpected() {
+    return 0;
 }
