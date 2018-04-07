@@ -3,17 +3,20 @@
 //
 
 #include "Environment.h"
-#include <tuple>
 
 using namespace std;
 
-tuple<int, int> Environment::initialState() {
+pair<int, int> Environment::initialState() {
     //tuple <int,int> result = {0,0};
     //return result;
-    return make_tuple(0,0);
+    return {0,0};//make_tuple(0,0);
 }
 
 Environment::Response Environment::step(int action) {
     return Environment::Response();
+}
+
+void Environment::visualizeGame() {
+
 }
 

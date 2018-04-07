@@ -6,22 +6,25 @@
 #define WORLDDOMINATION_ENVIRONMENT_H
 
 #include <vector>
-#include <tuple>
+//#include <tuple>
+
 
 using namespace std;
 
+static const vector<int> QValueSize = {4,3};
+
 class Environment {
+
     vector<vector<vector<int>>> gameRecord; //the game is stored here as a replay
     vector<vector<int>> playingGround; //current play ground
     vector<vector<int>> rewards; //possible rewards are saved here
 
-
 public:
-    static tuple<int, int> gameSize;// = {4,3};
+    //static const vector<int> QValueSize;
 
     class Response {
     public:
-        tuple<int, int> state; //game state
+        pair<int, int> state; //game state
         vector<int> options; //vector of all possible actions
         int reward; //reward earned
         bool finished = false; //indicates if game is over
@@ -40,8 +43,11 @@ public:
      */
     void visualizeGame();
 
-    tuple<int, int> initialState();
+    pair<int, int> initialState();
 };
+
+//looks ugly as fuck but apparently a static variable has to be set up as that
+//const vector<int> Environment::QValueSize = {4,3};
 
 
 #endif //WORLDDOMINATION_ENVIRONMENT_H
