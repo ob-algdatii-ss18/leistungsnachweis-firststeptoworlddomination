@@ -14,18 +14,22 @@ using namespace std;
 class Num2DTable {
 
     vector<double> values;
-    pair<int,int> shape;
+    pair<int,int> * shape;
 
     int getIndex(pair<int,int> indexPair) {
-        return indexPair.second*shape.first+indexPair.first;
+        return indexPair.first * shape->second + indexPair.second;
     }
 
 public:
 
-    Num2DTable(pair<int,int> size) {
+    Num2DTable(pair<int,int> * size) {
         shape = size;
-        int indexLength = size.first * size.second;
-        values = vector<double> (indexLength);
+        values = vector<double> (size->first * size->second);
+    }
+
+    Num2DTable(pair<int,int> *size, vector<double> values) {
+        shape = size;
+        this->values = values;
     }
 
     Num2DTable() {}
@@ -37,6 +41,8 @@ public:
     void setQValue(pair<int, int> index, double value) {
         values[getIndex(index)] = value;
     }
+
+
 
 };
 

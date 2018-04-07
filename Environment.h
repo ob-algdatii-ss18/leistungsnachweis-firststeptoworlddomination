@@ -11,23 +11,33 @@
 
 using namespace std;
 
-static const pair<int,int> QValueSize = {4,3};//@todo this is nasty crap
+static const pair<int, int> QValueSize = {4, 3};//@todo this is nasty crap
 
 class Environment {
 
     vector<Num2DTable> gameRecord; //the game is stored here as a replay
-    Num2DTable playingGround; //current play ground
-    Num2DTable rewards; //possible rewards are saved here
+    Num2DTable playingGround{new pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //current play ground
+    Num2DTable rewards{new pair<int, int>{3, 4},
+                       {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //possible rewards are saved here
+    pair<int, int> *agentPosition = new pair<int, int>{2, 0};
+    pair<int, int> shape{3, 4};
 
 public:
     //static const vector<int> QValueSize;
 
     class Response {
     public:
-        pair<int, int> state; //game state
+        pair<int, int> *state; //game state
         vector<int> options; //vector of all possible actions
-        int reward; //reward earned
+        double reward; //reward earned
         bool finished = false; //indicates if game is over
+
+        Response(pair<int, int> *state, vector<int> options, double reward, bool finished) {
+            this->state = state;
+            this->options = options;
+            this->reward = reward;
+            this->finished = finished;
+        }
     };
 
 
@@ -43,7 +53,7 @@ public:
      */
     void visualizeGame();
 
-    pair<int, int> initialState();
+    pair<int, int> *initialState();
 };
 
 //looks ugly as fuck but apparently a static variable has to be set up as that

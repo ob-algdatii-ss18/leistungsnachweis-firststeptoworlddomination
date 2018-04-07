@@ -21,7 +21,7 @@ private:
 public:
     Num2DTable qValues;
     Environment environment;
-    pair<int, int> currentState; //current state the agent is in
+    pair<int, int> * currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
     double discountRate; //how much value is given to future rewards
     int environmentType;//not needed for now but will be as soon as we have different environments
@@ -32,7 +32,7 @@ public:
      * @param learningRate
      * @param discountRate
      */
-    Agent(double learningRate, double discountRate);
+    Agent(double learningRate, double discountRate, double explRate);
 
     /*
      * just a dummy test method, no value besides that
@@ -52,9 +52,11 @@ private:
 
     void playGame();
 
-    int choseAction(Environment::Response response);
+    int choseAction();
 
-    double maxExpected(Environment::Response response);
+    pair<double, int> * maxExpected(pair<int, int> *response);
+
+    double explRate;
 };
 
 
