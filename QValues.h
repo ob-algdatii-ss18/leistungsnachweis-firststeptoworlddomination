@@ -14,30 +14,31 @@ using namespace std;
 class QValues {
 
     vector<double> qValues;//@todo could be a simple list too
-    vector<int> shape;
+    pair<int,int> shape;
+
+    int getIndex(pair<int,int> indexPair) {
+        return indexPair.second*shape.first+indexPair.first;
+    }
 
 public:
 
-    QValues(vector<int> size) {
+    QValues(pair<int,int> size) {
         shape = size;
-        int indexLength = 1;
-        for(int i = 0; i < size.size(); i++)
-            indexLength *= size[i];
-        //qValues = vector<double> (size);
-        qValues = {4,3};
+        int indexLength = size.first * size.second;
+        qValues = vector<double> (indexLength);
     }
 
+    //@todo shouldn't be necessary
     QValues() {}
 
     double operator[](const pair<int,int> index) {
-        int address = 0;//access the actual index by using the shape
-        return qValues[address];
-        //return qValues[i.first][i.second];
+        return qValues[getIndex(index)];
     }
 
-    void setValue(pair<int, int> index, double value) {
-        qValues[index.first+index.second] = value;//@todo index calculation is still wrong
+    void setQValue(pair<int, int> index, double value) {
+        qValues[getIndex(index)] = value;
     }
+
 };
 
 
