@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 #include "Environment.h"
-#include "QValues.h"
+#include "Num2DTable.h"
 
 
 using namespace std;
@@ -19,7 +19,7 @@ private:
 
 
 public:
-    QValues qValues;
+    Num2DTable qValues;
     Environment environment;
     pair<int, int> currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees

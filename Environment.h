@@ -6,18 +6,18 @@
 #define WORLDDOMINATION_ENVIRONMENT_H
 
 #include <vector>
-//#include <tuple>
+#include "Num2DTable.h"
 
 
 using namespace std;
 
-static const vector<int> QValueSize = {4,3};
+static const pair<int,int> QValueSize = {4,3};//@todo this is nasty crap
 
 class Environment {
 
-    vector<vector<vector<int>>> gameRecord; //the game is stored here as a replay
-    vector<vector<int>> playingGround; //current play ground
-    vector<vector<int>> rewards; //possible rewards are saved here
+    vector<Num2DTable> gameRecord; //the game is stored here as a replay
+    Num2DTable playingGround; //current play ground
+    Num2DTable rewards; //possible rewards are saved here
 
 public:
     //static const vector<int> QValueSize;

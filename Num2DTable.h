@@ -11,9 +11,9 @@
 
 using namespace std;
 
-class QValues {
+class Num2DTable {
 
-    vector<double> qValues;//@todo could be a simple list too
+    vector<double> values;
     pair<int,int> shape;
 
     int getIndex(pair<int,int> indexPair) {
@@ -22,21 +22,20 @@ class QValues {
 
 public:
 
-    QValues(pair<int,int> size) {
+    Num2DTable(pair<int,int> size) {
         shape = size;
         int indexLength = size.first * size.second;
-        qValues = vector<double> (indexLength);
+        values = vector<double> (indexLength);
     }
 
-    //@todo shouldn't be necessary
-    QValues() {}
+    Num2DTable() {}
 
     double operator[](const pair<int,int> index) {
-        return qValues[getIndex(index)];
+        return values[getIndex(index)];
     }
 
     void setQValue(pair<int, int> index, double value) {
-        qValues[getIndex(index)] = value;
+        values[getIndex(index)] = value;
     }
 
 };

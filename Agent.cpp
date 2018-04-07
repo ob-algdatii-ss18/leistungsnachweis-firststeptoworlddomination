@@ -19,8 +19,9 @@ void Agent::fit(int numberOfGames) {
 }
 
 Agent::Agent(double learningRate, double discountRate) {
-    pair<int,int> size {4,3};
-    this->qValues = QValues(size); //@todo get size of game for this
+    //pair<int,int> size {4,3};
+    pair<int,int> size = QValueSize;
+    this->qValues = Num2DTable(size); //@todo get size of game for this
     this->learningRate = learningRate;
     this->discountRate = discountRate;
 }
