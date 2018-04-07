@@ -18,10 +18,10 @@ void Agent::fit(int numberOfGames) {
     }
 }
 
-Agent::Agent(double learningRate, double greedyRate) {
-    qValues = vector<vector<double>>; //@todo get size of game for this
+Agent::Agent(double learningRate, double discountRate) {
+    this->qValues = QValues(); //@todo get size of game for this
     this->learningRate = learningRate;
-    this->greedyRate = greedyRate;
+    this->discountRate = discountRate;
 }
 
 void Agent::playGame() {
@@ -39,10 +39,14 @@ void Agent::playGame() {
 
 void Agent::updateQValues(Environment::Response response) {
     double q = qValues[currentState];
-    q += learningRate * (response.reward + greedyRate * maxExpected()) - q;
+    q += learningRate * (response.reward + discountRate * maxExpected()) - q;
 }
 
 //@todo implement maxExpected()
 double Agent::maxExpected() {
+    return 0;
+}
+
+int Agent::choseAction(Environment::Response response) {
     return 0;
 }

@@ -17,7 +17,7 @@ class Environment {
 
 
 public:
-    static tuple<int, int> gameSize;
+    static tuple<int, int> gameSize;// = {4,3};
 
     class Response {
     public:
@@ -33,14 +33,14 @@ public:
      * @params action: chosen action by the agent
      * @return Response (state, options, reward, somethingsMissing)
      */
-    Response step(int action);
+    Environment::Response step(int action);
 
     /*
      * creates some kind of sequence of images out of the game record
      */
     void visualizeGame();
 
-    std::tuple<int, int> initialState();
+    tuple<int, int> initialState();
 };
 
 

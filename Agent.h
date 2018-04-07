@@ -12,25 +12,11 @@
 using namespace std;
 
 class Agent {
-    vector<double> qValues;
-    Environment environment;
-    std::tuple<int, int> currentState;
-    double learningRate;
-    double greedyRate;
-    int environmentType;
-
-public:
-
-    Agent(double learningRate, double greedyRate);
-
-    void test();
-
-    void fit(int numberOfGames);
-
-
 private:
+    //it has to be up here since the compiler will crash otherwise
     class QValues {
-        vector<vector<double>> qValues;
+        vector<vector<double>> qValues;//@todo could be a simple list too
+
     public:
         double operator[](tuple<int, int> i) {
             //@todo schauen ob caro da nen Schmarrn geschrieben hat mit get<0>(i)...
@@ -40,11 +26,40 @@ private:
 
     };
 
+public:
+    QValues qValues;
+    Environment environment;
+    std::tuple<int, int> currentState; //current state the agent is in
+    double learningRate; //how fast he adopts to things he sees
+    double discountRate; //how much value is given to future rewards
+    int environmentType;//not needed for now but will be as soon as we have different environments
+
+public:
+    /*
+     * constructor
+     * @param learningRate
+     * @param discountRate
+     */
+    Agent(double learningRate, double discountRate);
+
+    /*
+     * just a dummy test method, no value besides that
+     */
+    void test();
+
+    /*
+     * lets the agent learn from a given number of games
+     */
+    void fit(int numberOfGames);
+
+
+private:
+
     void updateQValues(Environment::Response response);
 
-    int choseAction(Environment::Response response);
-
     void playGame();
+
+    int choseAction(Environment::Response response);
 
     double maxExpected();
 };
