@@ -19,7 +19,7 @@ private:
 
 
 public:
-    Num2DTable qValues;
+    Num2DTable * qValues;
     Environment environment;
     pair<int, int> * currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
@@ -52,7 +52,7 @@ private:
 
     void playGame();
 
-    int choseAction();
+    int * choseAction();
 
     pair<double, int> * maxExpected(pair<int, int> *response);
 

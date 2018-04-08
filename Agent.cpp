@@ -25,9 +25,11 @@ void Agent::fit(int numberOfGames) {
 Agent::Agent(double learningRate, double discountRate, double explRate) {
     //pair<int,int> size {4,3};
     pair<int, int> size = QValueSize;
-    this->qValues = Num2DTable(&size); //@todo get size of game for this
+    cout << "init qValues - size: " << size.first << "," << size.second << endl;
+    this->qValues = new Num2DTable(&size); //@todo get size of game for this
     this->learningRate = learningRate;
     this->discountRate = discountRate;
+    this->explRate = explRate;
 }
 
 void Agent::playGame() {
@@ -35,9 +37,8 @@ void Agent::playGame() {
     int counter = 0;
 
     while (!finished) {
-        cout << "current state: " << (*currentState).first << "," << (*currentState).second << endl;
+        cout << "\ncurrent state: " << (*currentState).first << "," << (*currentState).second << endl;
         Environment::Response response = environment.step(choseAction());
-        cout << "Update QValues" << endl;
         updateQValues(response);
         currentState = response.state; //{response.state.first, response.state.second};
         finished = response.finished;
@@ -45,47 +46,61 @@ void Agent::playGame() {
             cout << "finished is true" << endl;
             break;
         }
-        cout << counter++ << " " << finished << endl;
+        //cout << counter++ << " " << finished << endl;
     }
 }
 
 void Agent::updateQValues(Environment::Response response) {
-    double q = qValues[*currentState];
+    cout << "updateQValues" << endl;
+    double q = (*qValues)[*currentState];
     q += learningRate * (response.reward + discountRate * (*(maxExpected(response.state))).first) - q;
-    qValues.setQValue(*currentState, q);
+    (*qValues).setQValue(*currentState, q);
 }
 
 //@todo implement maxExpected()
 pair<double, int> *Agent::maxExpected(pair<int, int> *state) {
+
     pair<int, int> *testAt = new pair<int, int>{(*state).first - 1, (*state).second};
-    double maxVal = qValues[*testAt];
+    double maxVal = (*qValues)[*testAt];
     int direction = 0;
 
+    testAt = new pair<int, int>{(*state).first, (*state).second + 1};
+    if ((*qValues)[*testAt] > maxVal) {
+        maxVal = (*qValues)[*testAt];
+        direction = 1;
+    }
+
+
     testAt = new pair<int, int>{(*state).first + 1, (*state).second};
-    if (qValues[*testAt] > maxVal) {
-        maxVal = qValues[*testAt];
+    if ((*qValues)[*testAt] > maxVal) {
+        maxVal = (*qValues)[*testAt];
         direction = 2;
     }
 
     testAt = new pair<int, int>{(*state).first, (*state).second - 1};
-    if (qValues[*testAt] > maxVal) {
-        maxVal = qValues[*testAt];
+    if ((*qValues)[*testAt] > maxVal) {
+        maxVal = (*qValues)[*testAt];
         direction = 3;
     }
 
-    testAt = new pair<int, int>{(*state).first, (*state).second + 1};
-    if (qValues[*testAt] > maxVal) {
-        maxVal = qValues[*testAt];
-        direction = 1;
-    }
+
     pair<double, int> *result = new pair<double, int>{maxVal, direction};
     return result;
 }
 
 //this is the agents policy
-int Agent::choseAction() {
-    double p = rand() % 100 / 100;
-    if (p < explRate)
-        return (*maxExpected(currentState)).second;
-    return rand() % 4;
+int *Agent::choseAction() {
+    // double p = rand() % 100 / 100;
+    //random number between 0 and 1
+    double p = ((double) rand() / (RAND_MAX));
+    cout << "random = " << p << " (explRate = " << explRate <<")"<< endl;
+
+    int *result;
+    if (p < explRate) {
+        result = new int((*maxExpected(currentState)).second);
+    } else {
+        result = new int(rand() % 4);
+        cout << "##### random direction #####"  << endl;
+    }
+    return result;
 }
