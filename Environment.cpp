@@ -22,7 +22,6 @@ pair<int, int> *Environment::initialState() {
  */
 Environment::Response* Environment::step(int action) {
 
-    //cout << "direction: " << *action << endl;
     //move the agent
 
     if (action == 0 && agentPosition.first > 0)
@@ -37,16 +36,12 @@ Environment::Response* Environment::step(int action) {
     else if (action == 3 && agentPosition.second > 0)
         agentPosition = pair<int, int>{agentPosition.first, agentPosition.second - 1};
 
-    //cout << "game position: " << agentPosition->first << "," << agentPosition->second << endl;
-    cout << "test 3.1" << endl;
     bool finished = false;
     if (playingGround[agentPosition] == -1)
         finished = true;
-    cout << "test 3.2" << endl;
     gameRecord.push_back(playingGround);
     actionRecord.push_back(action);
-    cout << "test 3.3" << endl;
-    Response* result = new Environment::Response(&agentPosition, {0}, rewards[agentPosition], finished)
+    Response* result = new Environment::Response(&agentPosition, {0}, rewards[agentPosition], finished);
     return result;
 }
 

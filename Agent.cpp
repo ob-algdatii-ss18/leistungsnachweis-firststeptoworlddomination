@@ -35,21 +35,15 @@ void Agent::playGame() {
 
     while (!finished) {
         //cout << "\ncurrent state: " << currentState->first << "," << currentState->second << endl;
-        cout<<"test1.5"<<endl;
         int a = choseAction();
-        cout<<"test1.6"<<endl;
         Environment::Response* response = environment.step(a);
-        cout<<"test2"<<endl;
         updateQValues(response);
-        cout<<"test3"<<endl;
-        currentState = pair<int,int>(*response.state); //{response.state.first, response.state.second};
-        cout<<"test4"<<endl;
-        finished = response.finished;
-        cout<<"test5"<<endl;
-        if (finished) {
+        currentState = pair<int,int>(*response->state); //{response.state.first, response.state.second};
+        finished = response->finished;
+        /*if (finished) {
             cout << "finished is true" << endl;
             break;
-        }
+        }*/
         counter++;
     }
     cout << counter<< " " << finished << endl;
