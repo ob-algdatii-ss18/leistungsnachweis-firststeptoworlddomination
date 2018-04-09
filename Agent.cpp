@@ -16,9 +16,11 @@ void Agent::fit(int numberOfGames) {
     for (int i = 0; i < numberOfGames; i++) {
         cout << "epoch: " << i << endl;
         environment = Environment();
+        cout << "test1" << endl;
         currentState = pair<int,int>(*environment.initialState());
         cout << "Start Game" << endl;
         playGame();
+        cout << "finished game" << endl;
     }
 }
 
@@ -26,7 +28,7 @@ Agent::Agent(double learningRate, double discountRate, double explRate) {
 
     pair<int, int> size = QValueSize;
     cout << "init qValues - size: " << size.first << "," << size.second << endl;
-    this->qValues = Num2DTable(&size); //@todo get size of game for this
+    this->qValues = Num2DTable(size); //@todo get size of game for this
     this->learningRate = learningRate;
     this->discountRate = discountRate;
     this->explRate = explRate;
@@ -38,10 +40,17 @@ void Agent::playGame() {
 
     while (!finished) {
         //cout << "\ncurrent state: " << currentState->first << "," << currentState->second << endl;
-        Environment::Response response = environment.step(choseAction());
+        cout<<"test1.5"<<endl;
+        int a = choseAction();
+        cout<<"test1.6"<<endl;
+        Environment::Response response = environment.step(a);
+        cout<<"test2"<<endl;
         updateQValues(response);
+        cout<<"test3"<<endl;
         currentState = pair<int,int>(*response.state); //{response.state.first, response.state.second};
+        cout<<"test4"<<endl;
         finished = response.finished;
+        cout<<"test5"<<endl;
         if (finished) {
             cout << "finished is true" << endl;
             break;
@@ -91,15 +100,15 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 }
 
 //this is the agents policy
-int *Agent::choseAction() {
+int Agent::choseAction() {
     double p = ((double) rand() / (RAND_MAX));
     //cout << "random = " << p << " (explRate = " << explRate <<")"<< endl;
 
-    int *result;
+    int result;
     if (p < explRate) {
-        result = new int(maxExpected(&currentState)->second);
+        result = maxExpected(&currentState)->second;
     } else {
-        result = new int(rand() % 4);
+        result = rand() % 4;
         //cout << "##### random direction #####"  << endl;
     }
     return result;

@@ -20,20 +20,20 @@ pair<int, int> *Environment::initialState() {
  * changes the state of the game by taking a step.
  * @param action: action the agent choses
  */
-Environment::Response Environment::step(int * action) {
+Environment::Response Environment::step(int action) {
 
     //cout << "direction: " << *action << endl;
     //move the agent
-    if (*action == 0 && agentPosition.first > 0)
+    if (action == 0 && agentPosition.first > 0)
         agentPosition = pair<int, int>{agentPosition.first - 1, agentPosition.second};
 
-    else if (*action == 2 && agentPosition.first < shape.first)
+    else if (action == 2 && agentPosition.first < shape.first)
         agentPosition = pair<int, int>{agentPosition.first + 1, agentPosition.second};
 
-    else if (*action == 1 && agentPosition.second < shape.second)
+    else if (action == 1 && agentPosition.second < shape.second)
         agentPosition = pair<int, int>{agentPosition.first, agentPosition.second + 1};
 
-    else if (*action == 3 && agentPosition.second > 0)
+    else if (action == 3 && agentPosition.second > 0)
         agentPosition = pair<int, int>{agentPosition.first, agentPosition.second - 1};
 
     //cout << "game position: " << agentPosition->first << "," << agentPosition->second << endl;
@@ -43,7 +43,7 @@ Environment::Response Environment::step(int * action) {
         finished = true;
 
     gameRecord.push_back(playingGround);
-    actionRecord.push_back(*action);
+    actionRecord.push_back(action);
     return Environment::Response(&agentPosition, {0}, rewards[agentPosition], finished);
 }
 

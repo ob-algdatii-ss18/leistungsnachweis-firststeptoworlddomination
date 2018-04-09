@@ -49,7 +49,7 @@ private:
 
     void playGame();
 
-    int * choseAction();
+    int choseAction();
 
     pair<double, int> * maxExpected(pair<int, int> *response);
 
