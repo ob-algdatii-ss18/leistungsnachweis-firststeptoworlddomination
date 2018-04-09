@@ -49,14 +49,14 @@ public:
     string toString() {
         cout << "shape: " << shape.first << " " << shape.second << endl;
         std::stringstream ss;
-        /*for(int i = 0; i < shape->first; i++) {
-            for(int j = 0; j < shape->second; j++) {
+        for(int i = 0; i < shape.first; i++) {
+            for(int j = 0; j < shape.second; j++) {
                 ss << values[getIndex({i,j})] << "\t";
             }
             ss << endl;
-        }*/
+        }
         std::string s = ss.str();
-        return "";
+        return s;
     }
 };
 
