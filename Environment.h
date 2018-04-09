@@ -16,14 +16,13 @@ static const pair<int, int> QValueSize = {4, 3};//@todo this is nasty crap
 class Environment {
 
     vector<Num2DTable> gameRecord; //the game is stored here as a replay
-    Num2DTable playingGround{new pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //current play ground
+    Num2DTable playingGround{new pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //play ground
     Num2DTable rewards{new pair<int, int>{3, 4},
-                       {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //possible rewards are saved here
+                       {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //rewards are saved here
     pair<int, int> *agentPosition = new pair<int, int>{2, 0};
     pair<int, int> shape{3, 4};
 
 public:
-    //static const vector<int> QValueSize;
 
     class Response {
     public:
@@ -55,9 +54,5 @@ public:
 
     pair<int, int> *initialState();
 };
-
-//looks ugly as fuck but apparently a static variable has to be set up as that
-//const vector<int> Environment::QValueSize = {4,3};
-
 
 #endif //WORLDDOMINATION_ENVIRONMENT_H

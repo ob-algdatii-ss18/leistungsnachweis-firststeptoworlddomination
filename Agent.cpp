@@ -7,10 +7,6 @@
 
 using namespace std;
 
-void Agent::test() {
-    cout << "Hello World!" << endl;
-}
-
 void Agent::fit(int numberOfGames) {
     cout << "Number of Games: " << numberOfGames << endl;
     for (int i = 0; i < numberOfGames; i++) {
@@ -23,7 +19,6 @@ void Agent::fit(int numberOfGames) {
 }
 
 Agent::Agent(double learningRate, double discountRate, double explRate) {
-    //pair<int,int> size {4,3};
     pair<int, int> size = QValueSize;
     cout << "init qValues - size: " << size.first << "," << size.second << endl;
     this->qValues = new Num2DTable(&size); //@todo get size of game for this
@@ -37,7 +32,7 @@ void Agent::playGame() {
     int counter = 0;
 
     while (!finished) {
-        cout << "\ncurrent state: " << (*currentState).first << "," << (*currentState).second << endl;
+        cout << "\ncurrent state: " << currentState->first << "," << currentState->second << endl;
         Environment::Response response = environment.step(choseAction());
         updateQValues(response);
         currentState = response.state; //{response.state.first, response.state.second};
@@ -53,31 +48,31 @@ void Agent::playGame() {
 void Agent::updateQValues(Environment::Response response) {
     cout << "updateQValues" << endl;
     double q = (*qValues)[*currentState];
-    q += learningRate * (response.reward + discountRate * (*(maxExpected(response.state))).first) - q;
+    q += learningRate * (response.reward + discountRate * (maxExpected(response.state))->first) - q;
     (*qValues).setQValue(*currentState, q);
 }
 
 //@todo implement maxExpected()
 pair<double, int> *Agent::maxExpected(pair<int, int> *state) {
 
-    pair<int, int> *testAt = new pair<int, int>{(*state).first - 1, (*state).second};
+    pair<int, int> *testAt = new pair<int, int>{state->first - 1, state->second};
     double maxVal = (*qValues)[*testAt];
     int direction = 0;
 
-    testAt = new pair<int, int>{(*state).first, (*state).second + 1};
+    testAt = new pair<int, int>{state->first, state->second + 1};
     if ((*qValues)[*testAt] > maxVal) {
         maxVal = (*qValues)[*testAt];
         direction = 1;
     }
 
 
-    testAt = new pair<int, int>{(*state).first + 1, (*state).second};
+    testAt = new pair<int, int>{state->first + 1, state->second};
     if ((*qValues)[*testAt] > maxVal) {
         maxVal = (*qValues)[*testAt];
         direction = 2;
     }
 
-    testAt = new pair<int, int>{(*state).first, (*state).second - 1};
+    testAt = new pair<int, int>{state->first, state->second - 1};
     if ((*qValues)[*testAt] > maxVal) {
         maxVal = (*qValues)[*testAt];
         direction = 3;
@@ -90,12 +85,11 @@ pair<double, int> *Agent::maxExpected(pair<int, int> *state) {
 
 //this is the agents policy
 int *Agent::choseAction() {
-    // double p = rand() % 100 / 100;
-    //random number between 0 and 1
+
     double p = ((double) rand() / (RAND_MAX));
     cout << "random = " << p << " (explRate = " << explRate <<")"<< endl;
 
-    int *result;
+    int *result;//@todo do we really need a pointer here?
     if (p < explRate) {
         result = new int((*maxExpected(currentState)).second);
     } else {

@@ -14,9 +14,6 @@
 using namespace std;
 
 class Agent {
-private:
-    //it has to be up here since the compiler will crash otherwise
-
 
 public:
     Num2DTable * qValues;
@@ -33,11 +30,6 @@ public:
      * @param discountRate
      */
     Agent(double learningRate, double discountRate, double explRate);
-
-    /*
-     * just a dummy test method, no value besides that
-     */
-    void test();
 
     /*
      * lets the agent learn from a given number of games
