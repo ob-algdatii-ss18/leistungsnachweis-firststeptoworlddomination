@@ -16,7 +16,7 @@ void Agent::fit(int numberOfGames) {
     for (int i = 0; i < numberOfGames; i++) {
         cout << "epoch: " << i << endl;
         environment = Environment();
-        currentState = environment.initialState();
+        currentState = pair<int,int>(*environment.initialState());
         cout << "Start Game" << endl;
         playGame();
     }
@@ -40,7 +40,7 @@ void Agent::playGame() {
         //cout << "\ncurrent state: " << currentState->first << "," << currentState->second << endl;
         Environment::Response response = environment.step(choseAction());
         updateQValues(response);
-        currentState = response.state; //{response.state.first, response.state.second};
+        currentState = pair<int,int>(*response.state); //{response.state.first, response.state.second};
         finished = response.finished;
         if (finished) {
             cout << "finished is true" << endl;
@@ -54,9 +54,9 @@ void Agent::playGame() {
 
 void Agent::updateQValues(Environment::Response response) {
     //cout << "updateQValues" << endl;
-    double q = qValues[*currentState];
+    double q = qValues[currentState];
     q += learningRate * (response.reward + discountRate * (maxExpected(response.state))->first) - q;
-    qValues.setQValue(*currentState, q);
+    qValues.setQValue(currentState, q);
 }
 
 //@todo implement maxExpected()
@@ -97,7 +97,7 @@ int *Agent::choseAction() {
 
     int *result;
     if (p < explRate) {
-        result = new int(maxExpected(currentState)->second);
+        result = new int(maxExpected(&currentState)->second);
     } else {
         result = new int(rand() % 4);
         //cout << "##### random direction #####"  << endl;
