@@ -45,7 +45,7 @@ public:
 
 private:
 
-    void updateQValues(Environment::Response response);
+    void updateQValues(Environment::Response *response);
 
     void playGame();
 

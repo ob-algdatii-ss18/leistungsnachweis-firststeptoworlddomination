@@ -58,7 +58,7 @@ public:
      * @params action: chosen action by the agent
      * @return Response (state, options, reward, somethingsMissing)
      */
-    Environment::Response step(int action);
+    Environment::Response* step(int action);
 
     /*
      * creates some kind of sequence of images out of the game record

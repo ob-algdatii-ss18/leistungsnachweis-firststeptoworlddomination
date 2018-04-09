@@ -43,7 +43,7 @@ void Agent::playGame() {
         cout<<"test1.5"<<endl;
         int a = choseAction();
         cout<<"test1.6"<<endl;
-        Environment::Response response = environment.step(a);
+        Environment::Response* response = environment.step(a);
         cout<<"test2"<<endl;
         updateQValues(response);
         cout<<"test3"<<endl;
@@ -61,10 +61,10 @@ void Agent::playGame() {
     cout << qValues.toString() << endl << endl;
 }
 
-void Agent::updateQValues(Environment::Response response) {
+void Agent::updateQValues(Environment::Response *response) {
     //cout << "updateQValues" << endl;
     double q = qValues[currentState];
-    q += learningRate * (response.reward + discountRate * (maxExpected(response.state))->first) - q;
+    q += learningRate * (response->reward + discountRate * (maxExpected(response->state))->first) - q;
     qValues.setQValue(currentState, q);
 }
 

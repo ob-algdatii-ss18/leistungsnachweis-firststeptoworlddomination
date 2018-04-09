@@ -20,7 +20,7 @@ pair<int, int> *Environment::initialState() {
  * changes the state of the game by taking a step.
  * @param action: action the agent choses
  */
-Environment::Response Environment::step(int action) {
+Environment::Response* Environment::step(int action) {
 
     //cout << "direction: " << *action << endl;
     //move the agent
@@ -37,14 +37,16 @@ Environment::Response Environment::step(int action) {
         agentPosition = pair<int, int>{agentPosition.first, agentPosition.second - 1};
 
     //cout << "game position: " << agentPosition->first << "," << agentPosition->second << endl;
-
+    cout << "test 3.1" << endl;
     bool finished = false;
     if (playingGround[agentPosition] == -1)
         finished = true;
-
+    cout << "test 3.2" << endl;
     gameRecord.push_back(playingGround);
     actionRecord.push_back(action);
-    return Environment::Response(&agentPosition, {0}, rewards[agentPosition], finished);
+    cout << "test 3.3" << endl;
+    Response* result = new Environment::Response(&agentPosition, {0}, rewards[agentPosition], finished)
+    return result;
 }
 
 void Environment::visualizeGame() {
