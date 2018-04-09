@@ -60,7 +60,7 @@ void Agent::updateQValues(Environment::Response response) {
 }
 
 //@todo implement maxExpected()
-pair<double, int> *Agent::maxExpected(pair<int, int> *state) {
+pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 
     pair<int, int> *testAt = new pair<int, int>{state->first - 1, state->second};
     double maxVal = (*qValues)[*testAt];

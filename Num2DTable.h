@@ -11,6 +11,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ class Num2DTable {
 
 public:
 
-    vector<double> values;
+    vector<double> values; //those variables may not be pointers
     pair<int,int> shape;
 
     Num2DTable(pair<int,int> * size) {
@@ -49,14 +50,15 @@ public:
     string toString() {
         cout << "shape: " << shape.first << " " << shape.second << endl;
         std::stringstream ss;
+        ss << setprecision(3) << fixed;
         for(int i = 0; i < shape.first; i++) {
             for(int j = 0; j < shape.second; j++) {
                 ss << values[getIndex({i,j})] << "\t";
             }
             ss << endl;
         }
-        std::string s = ss.str();
-        return s;
+        //std::string s = ss.str();
+        return ss.str();
     }
 };
 
