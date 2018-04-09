@@ -11,15 +11,18 @@
 
 using namespace std;
 
-static const pair<int, int> QValueSize = {4, 3};//@todo this is nasty crap
+static const pair<int, int> QValueSize = {3, 4};//@todo this is nasty crap
 
 class Environment {
 
-    vector<Num2DTable> gameRecord; //the game is stored here as a replay
-    Num2DTable playingGround{new pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //play ground
-    Num2DTable rewards{new pair<int, int>{3, 4},
-                       {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //rewards are saved here
-    pair<int, int> *agentPosition = new pair<int, int>{2, 0};
+
+    vector<Num2DTable> gameRecord {}; //the game is stored here as a replay
+    vector<int> actionRecord {};//actions taken by the agent are stored here
+    Num2DTable playingGround{pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //current play ground
+    Num2DTable rewards{pair<int, int>{3, 4},
+                       {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //possible rewards are saved here
+    pair<int, int> agentPosition = pair<int, int>{2, 0};
+
     pair<int, int> shape{3, 4};
 
 public:
@@ -39,13 +42,24 @@ public:
         }
     };
 
+    Environment() {
+        cout << "env const" << endl;
+        vector<Num2DTable> gameRecord {}; //the game is stored here as a replay
+        vector<int> actionRecord {};//actions taken by the agent are stored here
+        Num2DTable playingGround{pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //current play ground
+        Num2DTable rewards{pair<int, int>{3, 4},
+                           {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //possible rewards are saved here
+        pair<int, int> agentPosition = pair<int, int>{2, 0};
+        pair<int, int> shape{3, 4};
+        cout << "end const" << endl;
+    }
 
     /*
      * takes a step in a certain direction
      * @params action: chosen action by the agent
      * @return Response (state, options, reward, somethingsMissing)
      */
-    Environment::Response step(int * action);
+    Environment::Response* step(int action);
 
     /*
      * creates some kind of sequence of images out of the game record

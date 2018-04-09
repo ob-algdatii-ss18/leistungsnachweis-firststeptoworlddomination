@@ -12,16 +12,18 @@ void Agent::fit(int numberOfGames) {
     for (int i = 0; i < numberOfGames; i++) {
         cout << "epoch: " << i << endl;
         environment = Environment();
-        currentState = environment.initialState();
+        cout << "test1" << endl;
+        currentState = pair<int,int>(*environment.initialState());
         cout << "Start Game" << endl;
         playGame();
+        cout << "finished game" << endl;
     }
 }
 
 Agent::Agent(double learningRate, double discountRate, double explRate) {
     pair<int, int> size = QValueSize;
     cout << "init qValues - size: " << size.first << "," << size.second << endl;
-    this->qValues = new Num2DTable(&size); //@todo get size of game for this
+    this->qValues = Num2DTable(size); //@todo get size of game for this
     this->learningRate = learningRate;
     this->discountRate = discountRate;
     this->explRate = explRate;
@@ -32,49 +34,61 @@ void Agent::playGame() {
     int counter = 0;
 
     while (!finished) {
-        cout << "\ncurrent state: " << currentState->first << "," << currentState->second << endl;
-        Environment::Response response = environment.step(choseAction());
+        //cout << "\ncurrent state: " << currentState->first << "," << currentState->second << endl;
+        cout<<"test1.5"<<endl;
+        int a = choseAction();
+        cout<<"test1.6"<<endl;
+        Environment::Response* response = environment.step(a);
+        cout<<"test2"<<endl;
         updateQValues(response);
-        currentState = response.state; //{response.state.first, response.state.second};
+        cout<<"test3"<<endl;
+        currentState = pair<int,int>(*response.state); //{response.state.first, response.state.second};
+        cout<<"test4"<<endl;
         finished = response.finished;
+        cout<<"test5"<<endl;
         if (finished) {
             cout << "finished is true" << endl;
             break;
         }
-        //cout << counter++ << " " << finished << endl;
+        counter++;
     }
+    cout << counter<< " " << finished << endl;
+    cout << qValues.toString() << endl << endl;
 }
 
-void Agent::updateQValues(Environment::Response response) {
-    cout << "updateQValues" << endl;
-    double q = (*qValues)[*currentState];
-    q += learningRate * (response.reward + discountRate * (maxExpected(response.state))->first) - q;
-    (*qValues).setQValue(*currentState, q);
+
+void Agent::updateQValues(Environment::Response *response) {
+    //cout << "updateQValues" << endl;
+    double q = qValues[currentState];
+    q += learningRate * (response->reward + discountRate * (maxExpected(response->state))->first) - q;
+    qValues.setQValue(currentState, q);
 }
 
 //@todo implement maxExpected()
-pair<double, int> *Agent::maxExpected(pair<int, int> *state) {
+pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 
     pair<int, int> *testAt = new pair<int, int>{state->first - 1, state->second};
-    double maxVal = (*qValues)[*testAt];
+
+    double maxVal = qValues[*testAt];
     int direction = 0;
 
     testAt = new pair<int, int>{state->first, state->second + 1};
-    if ((*qValues)[*testAt] > maxVal) {
-        maxVal = (*qValues)[*testAt];
+    if (qValues[*testAt] > maxVal) {
+        maxVal = qValues[*testAt];
         direction = 1;
     }
 
 
     testAt = new pair<int, int>{state->first + 1, state->second};
-    if ((*qValues)[*testAt] > maxVal) {
-        maxVal = (*qValues)[*testAt];
+
+    if (qValues[*testAt] > maxVal) {
+        maxVal = qValues[*testAt];
         direction = 2;
     }
 
     testAt = new pair<int, int>{state->first, state->second - 1};
-    if ((*qValues)[*testAt] > maxVal) {
-        maxVal = (*qValues)[*testAt];
+    if (qValues[*testAt] > maxVal) {
+        maxVal = qValues[*testAt];
         direction = 3;
     }
 
@@ -84,17 +98,16 @@ pair<double, int> *Agent::maxExpected(pair<int, int> *state) {
 }
 
 //this is the agents policy
-int *Agent::choseAction() {
-
+int Agent::choseAction() {
     double p = ((double) rand() / (RAND_MAX));
-    cout << "random = " << p << " (explRate = " << explRate <<")"<< endl;
+    //cout << "random = " << p << " (explRate = " << explRate <<")"<< endl;
 
-    int *result;//@todo do we really need a pointer here?
+    int result;
     if (p < explRate) {
-        result = new int((*maxExpected(currentState)).second);
+        result = maxExpected(&currentState)->second;
     } else {
-        result = new int(rand() % 4);
-        cout << "##### random direction #####"  << endl;
+        result = rand() % 4;
+        //cout << "##### random direction #####"  << endl;
     }
     return result;
 }
