@@ -23,18 +23,25 @@ pair<int, int> *Environment::initialState() {
 Environment::Response* Environment::step(int action) {
 
     //move the agent
+    pair<int, int> tmp {agentPosition.first - 1, agentPosition.second};
+    if (action == 0 && agentPosition.first > 0 && playingGround[tmp] != 0) {
+        agentPosition = tmp;
+    }
 
-    if (action == 0 && agentPosition.first > 0)
-        agentPosition = pair<int, int>{agentPosition.first - 1, agentPosition.second};
+    tmp = {agentPosition.first + 1, agentPosition.second};
+    if (action == 2 && agentPosition.first < shape.first && playingGround[tmp] != 0){
+        agentPosition = tmp;
+    }
 
-    else if (action == 2 && agentPosition.first < shape.first)
-        agentPosition = pair<int, int>{agentPosition.first + 1, agentPosition.second};
+    tmp = {agentPosition.first, agentPosition.second + 1};
+    if (action == 1 && agentPosition.second < shape.second && playingGround[tmp] != 0) {
+        agentPosition = tmp;
+    }
 
-    else if (action == 1 && agentPosition.second < shape.second)
-        agentPosition = pair<int, int>{agentPosition.first, agentPosition.second + 1};
-
-    else if (action == 3 && agentPosition.second > 0)
-        agentPosition = pair<int, int>{agentPosition.first, agentPosition.second - 1};
+    tmp = {agentPosition.first, agentPosition.second + 1};
+    if (action == 3 && agentPosition.second > 0 && playingGround[tmp] != 0) {
+        agentPosition = tmp;
+    }
 
     bool finished = false;
     if (playingGround[agentPosition] == -1)

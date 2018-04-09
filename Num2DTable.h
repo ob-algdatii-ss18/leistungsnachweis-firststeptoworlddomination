@@ -18,8 +18,10 @@ using namespace std;
 class Num2DTable {
 
     int getIndex(pair<int,int> indexPair) {
+        //cout << "indexPair: " << indexPair.first << "/" << indexPair.second << endl;
+        //cout << "shape: " << shape.first << "/" << shape.second << endl;
         if(indexPair.first > shape.first + 1|| indexPair.second > shape.second + 1) {
-            cout << "crap " << indexPair.first << " " << indexPair.second << endl;
+            //cout << "crap " << indexPair.first << " " << indexPair.second << endl;
             throw 20;
         }
         return indexPair.first * shape.second + indexPair.second;
@@ -52,7 +54,6 @@ public:
 
 
     string toString() {
-        cout << "shape: " << shape.first << " " << shape.second << endl;
         std::stringstream ss;
         ss << setprecision(3) << fixed;
         for(int i = 0; i < shape.first; i++) {

@@ -15,7 +15,7 @@ using namespace std;
 
 class Agent {
 
-    Num2DTable qValues;
+    Num2DTable* qValues;
     Environment environment;
     pair<int, int> currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
@@ -37,7 +37,6 @@ public:
      */
     void fit(int numberOfGames);
 
-
 private:
 
     void updateQValues(Environment::Response *response);
@@ -46,7 +45,7 @@ private:
 
     int choseAction();
 
-    pair<double, int> * maxExpected(pair<int, int> *response);
+    pair<double, int>* maxExpected(pair<int, int> *response);
 
     double explRate;
 };

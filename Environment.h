@@ -23,9 +23,9 @@ class Environment {
                        {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //possible rewards are saved here
     pair<int, int> agentPosition = pair<int, int>{2, 0};
 
-    pair<int, int> shape{3, 4};
-
 public:
+
+    pair<int, int> shape{3, 4};
 
     class Response {
     public:
@@ -39,6 +39,13 @@ public:
             this->options = options;
             this->reward = reward;
             this->finished = finished;
+        }
+
+        string toString() {
+            std::stringstream ss;
+            ss << setprecision(3) << fixed;
+            ss << "state: " << state->first << "/" << state->second << ", reward: " << reward;
+            return ss.str();
         }
     };
 
@@ -63,6 +70,14 @@ public:
      * creates some kind of sequence of images out of the game record
      */
     void visualizeGame();
+
+    string toString_PG() {
+        return playingGround.toString();
+    }
+
+    string toString_RW() {
+        return rewards.toString();
+    }
 
     pair<int, int> *initialState();
 };
