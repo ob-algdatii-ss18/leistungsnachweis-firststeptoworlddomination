@@ -24,27 +24,27 @@ Environment::Response Environment::step(int * action) {
 
     //cout << "direction: " << *action << endl;
     //move the agent
-    if (*action == 0 && (*agentPosition).first > 0)
-        agentPosition = new pair<int, int>{agentPosition->first - 1, agentPosition->second};
+    if (*action == 0 && agentPosition.first > 0)
+        agentPosition = pair<int, int>{agentPosition.first - 1, agentPosition.second};
 
-    else if (*action == 2 && agentPosition->first < shape.first)
-        agentPosition = new pair<int, int>{agentPosition->first + 1, agentPosition->second};
+    else if (*action == 2 && agentPosition.first < shape.first)
+        agentPosition = pair<int, int>{agentPosition.first + 1, agentPosition.second};
 
-    else if (*action == 1 && (*agentPosition).second < shape.second)
-        agentPosition = new pair<int, int>{agentPosition->first, agentPosition->second + 1};
+    else if (*action == 1 && agentPosition.second < shape.second)
+        agentPosition = pair<int, int>{agentPosition.first, agentPosition.second + 1};
 
-    else if (*action == 3 && agentPosition->second > 0)
-        agentPosition = new pair<int, int>{agentPosition->first, agentPosition->second - 1};
+    else if (*action == 3 && agentPosition.second > 0)
+        agentPosition = pair<int, int>{agentPosition.first, agentPosition.second - 1};
 
     //cout << "game position: " << agentPosition->first << "," << agentPosition->second << endl;
 
     bool finished = false;
-    if (playingGround[*agentPosition] == -1)
+    if (playingGround[agentPosition] == -1)
         finished = true;
 
     gameRecord.push_back(playingGround);
     actionRecord.push_back(*action);
-    return Environment::Response(agentPosition, {0}, rewards[*agentPosition], finished);
+    return Environment::Response(&agentPosition, {0}, rewards[agentPosition], finished);
 }
 
 void Environment::visualizeGame() {
