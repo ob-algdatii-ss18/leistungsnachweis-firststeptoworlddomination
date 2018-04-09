@@ -16,6 +16,7 @@ static const pair<int, int> QValueSize = {4, 3};//@todo this is nasty crap
 class Environment {
 
     vector<Num2DTable> gameRecord; //the game is stored here as a replay
+    vector<int> actionRecord {};//actions taken by the agent are stored here
     Num2DTable playingGround{new pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //current play ground
     Num2DTable rewards{new pair<int, int>{3, 4},
                        {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //possible rewards are saved here

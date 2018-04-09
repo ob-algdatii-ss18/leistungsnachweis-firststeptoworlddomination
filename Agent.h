@@ -14,18 +14,14 @@
 using namespace std;
 
 class Agent {
-private:
-    //it has to be up here since the compiler will crash otherwise
 
-
-public:
     Num2DTable * qValues;
     Environment environment;
     pair<int, int> * currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
     double discountRate; //how much value is given to future rewards
     int environmentType;//not needed for now but will be as soon as we have different environments
-
+    //vector<int> actionCounter {};
 public:
     /*
      * constructor
