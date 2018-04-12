@@ -12,13 +12,17 @@ void Agent::fit(int numberOfGames) {
     for (int i = 0; i < numberOfGames; i++) {
         cout << "epoch: " << i << endl;
         environment = Environment();
+
+        //get variable from heap stores on the stack
         pair<int,int>* initState = environment.initialState();
-        currentState = pair<int,int>(*initState);
+        currentState = pair<int,int>(*initState);                       //@todo check copy
         delete initState;                                               //@todo necessary?
+
         cout << "Start Game" << endl;
         playGame();
-        cout << "finished game" << endl;
+        cout << "finished game" << endl << endl;
     }
+    cout << qValues->toString() << endl << endl;
 }
 
 Agent::Agent(double learningRate, double discountRate, double explRate) {
@@ -37,8 +41,8 @@ void Agent::playGame() {
     //cout << "game: \n" << environment.toString_PG() << endl;
     //cout << "rewards: \n" << environment.toString_RW() << endl;
     while (!finished) {
-        //cout << "\ncurrent state: " << currentState->first << "," << currentState->second << endl;
         int a = choseAction();
+        //cout << "\ncurrent state: " << currentState.first << "," << currentState.second << endl << "action: " << a << endl;
         Environment::Response* response = environment.step(a);
         updateQValues(response);
         currentState = pair<int,int>(*response->state); //{response.state.first, response.state.second};
@@ -46,60 +50,65 @@ void Agent::playGame() {
         counter++;
         delete response;
     }
-    cout << counter<< " " << finished << endl;
-    cout << qValues->toString() << endl << endl;
+    cout << "step counter:" << counter << endl;
+    //cout << qValues->toString() << endl << endl;
 }
 
 
 void Agent::updateQValues(Environment::Response *response) {
     //cout << response->toString() << endl;
-    double q = (*qValues)[currentState];
     //cout << "state: " << currentState.first << " " << currentState.second << endl;
+    double q = (*qValues)[currentState];
     //cout << "q1:" << q << endl;
     pair<double, int>* maxExp = maxExpected(response->state);
     //cout << "maxExp: " << maxExp->first << "/" << maxExp->second << endl;
+
     q += learningRate * (response->reward + discountRate * maxExp->first) - q;
+
+    cout << maxExp->first << endl; //@todo stuff
+    cout << "diff: " << learningRate * (response->reward + discountRate * maxExp->first) - q << endl;
     //cout << "q2:" << q << endl;
     qValues->setQValue(currentState, q);
+    delete maxExp;
 }
 
 pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 
     double maxVal = -100000; //@todo ugly thing, since hard coded lower bound
     //cout << "maxVal: " << maxVal << endl;
-    int direction = 0;
+    int action = 0;
 
     pair<int, int> testAt = pair<int, int>{state->first, state->second - 1};
     //cout << "testAt: " << testAt.first << "/" << testAt.second << endl;
-    if ((*qValues)[testAt] > maxVal && testAt.second >= 0) {
+    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
         //cout << "z: " << (*qValues)[testAt]<< endl;
-        direction = 0;
+        action = 0;
     }
 
     testAt = pair<int, int>{state->first, state->second + 1};
-    if ((*qValues)[testAt] > maxVal && environment.shape.second >  testAt.second) {
+    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
-        direction = 1;
+        action = 1;
     }
 
 
     testAt = pair<int, int>{state->first + 1, state->second};
 
-    if ((*qValues)[testAt] > maxVal  && environment.shape.first >  testAt.first) {
+    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
         //cout << "z: " << (*qValues)[testAt]<< endl;
-        direction = 2;
+        action = 2;
     }
 
     testAt = pair<int, int>{state->first - 1, state->second};
-    if ((*qValues)[testAt] > maxVal && testAt.first >= 0) {
+    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
         //cout << "z: " << (*qValues)[testAt]<< endl;
-        direction = 3;
+        action = 3;
     }
-    //cout << "maxVal: " << maxVal << "/" << direction << endl;
-    pair<double, int>* result = new pair<double, int>{maxVal, direction};
+    cout << "maxVal: " << maxVal << "/" << action << endl;
+    pair<double, int>* result = new pair<double, int>{maxVal, action};
     return result;
 }
 

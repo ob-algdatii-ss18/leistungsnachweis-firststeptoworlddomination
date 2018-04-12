@@ -30,7 +30,7 @@ public:
     class Response {
     public:
         pair<int, int> *state; //game state
-        vector<int> options; //vector of all possible actions
+        vector<int> options; //vector of all possible actions //@todo use it
         double reward; //reward earned
         bool finished = false; //indicates if game is over
 

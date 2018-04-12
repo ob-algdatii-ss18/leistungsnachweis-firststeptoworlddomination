@@ -20,16 +20,18 @@ class Num2DTable {
     int getIndex(pair<int,int> indexPair) {
         //cout << "indexPair: " << indexPair.first << "/" << indexPair.second << endl;
         //cout << "shape: " << shape.first << "/" << shape.second << endl;
-        if(indexPair.first > shape.first + 1|| indexPair.second > shape.second + 1) {
-            //cout << "crap " << indexPair.first << " " << indexPair.second << endl;
+        //if(indexPair.first >= shape.first || indexPair.second >= shape.second) {
+        if(!validAccess(indexPair)) {
+            cout << "crap " << indexPair.first << " " << indexPair.second << endl;
             throw 20;
         }
         return indexPair.first * shape.second + indexPair.second;
     }
 
+    vector<double> values;
+
 public:
 
-    vector<double> values;
     pair<int,int> shape;
 
     Num2DTable(pair<int,int> size) {
@@ -50,6 +52,10 @@ public:
 
     void setQValue(pair<int, int> index, double value) {
         values[getIndex(index)] = value;
+    }
+
+    bool validAccess (pair<int, int> indexPair) {
+        return indexPair.first < shape.first || indexPair.second < shape.second;
     }
 
 
