@@ -42,7 +42,7 @@ void Agent::playGame() {
     //cout << "rewards: \n" << environment.toString_RW() << endl;
     while (!finished) {
         int a = choseAction();
-        cout << "\ncurrent state: " << currentState.first << "," << currentState.second << endl << "action: " << a << endl;
+        //cout << "\ncurrent state: " << currentState.first << "," << currentState.second << endl << "action: " << a << endl;
         Environment::Response* response = environment.step(a);
         updateQValues(response);
         currentState = pair<int,int>(*response->state); //{response.state.first, response.state.second};
@@ -63,8 +63,12 @@ void Agent::updateQValues(Environment::Response *response) {
     //cout << "maxExp: " << maxExp->first << "/" << maxExp->second << endl;
 
     q += learningRate * (response->reward + discountRate * maxExp->first) - q;
-
-    cout << "diff: " << learningRate * (response->reward + discountRate * maxExp->first) - q << endl;
+    cout << "resp actions: "<<endl;
+    for(int i = 0; i < response->options.size(); i++) {
+        cout << response->options[i] << " ";
+    }
+    cout << endl <<"state: " << response->state->first << "/"<< response->state->second << endl;
+    //cout << "diff: " << learningRate * (response->reward + discountRate * maxExp->first) - q << endl;
     qValues->setQValue(currentState, q);
     delete maxExp;
 }
@@ -76,17 +80,14 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
     int action = 0;
 
     pair<int, int> testAt = pair<int, int>{state->first, state->second - 1};
-    //cout << "testAt: " << testAt.first << "/" << testAt.second << endl;
     if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
-        //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 0;
     }
 
     testAt = pair<int, int>{state->first, state->second + 1};
     if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
-        //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 1;
     }
 
@@ -94,17 +95,15 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
     testAt = pair<int, int>{state->first + 1, state->second};
     if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
-        //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 2;
     }
 
     testAt = pair<int, int>{state->first - 1, state->second};
     if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
-        //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 3;
     }
-    cout << "maxVal: " << maxVal << "/" << action << endl;
+    //cout << "maxVal: " << maxVal << "/" << action << endl;
     pair<double, int>* result = new pair<double, int>{maxVal, action};
     return result;
 }
@@ -112,14 +111,12 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 //this is the agents policy
 int Agent::choseAction() {
     double p = ((double) rand() / (RAND_MAX));
-    //cout << "random = " << p << " (explRate = " << explRate <<")"<< endl;
 
     int result;
     if (p < explRate) {
         result = maxExpected(&currentState)->second;
     } else {
         result = rand() % 4;
-        //cout << "##### random direction #####"  << endl;
     }
     return result;
 }

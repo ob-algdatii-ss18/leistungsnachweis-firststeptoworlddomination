@@ -47,7 +47,7 @@ public:
 
     Num2DTable(pair<int,int> size, vector<double> values) {
         shape = pair<int,int>(size);
-        this->values = vector<double>(values);
+        this->values = vector<double> (values);
     }
 
     Num2DTable() {}

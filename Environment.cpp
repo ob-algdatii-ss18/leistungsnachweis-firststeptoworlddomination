@@ -44,12 +44,23 @@ Environment::Response* Environment::step(int action) {
     }
     //cout << "agent pos: " << agentPosition.first <<","<<agentPosition.second<<endl;
 
+    //setting actions for response
+    vector<int> actions {};
+    if(playingGround.keyExists({agentPosition.first - 1, agentPosition.second}))
+        actions.push_back(0);
+    if(playingGround.keyExists({agentPosition.first + 1, agentPosition.second}))
+        actions.push_back(2);
+    if(playingGround.keyExists({agentPosition.first, agentPosition.second + 1}))
+        actions.push_back(1);
+    if(playingGround.keyExists({agentPosition.first, agentPosition.second - 1}))
+        actions.push_back(3);
+
     bool finished = false;
     if (playingGround[agentPosition] == -1)
         finished = true;
     gameRecord.push_back(playingGround);
     actionRecord.push_back(action);
-    Response* result = new Environment::Response(&agentPosition, {0}, rewards[agentPosition], finished);
+    Response* result = new Environment::Response(&agentPosition, actions, rewards[agentPosition], finished);
     return result;
 }
 
