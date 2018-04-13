@@ -61,7 +61,8 @@ public:
     }
 
     bool keyExists(pair<int, int> indexPair) {
-        return indexPair.first < shape.first && indexPair.second < shape.second;
+        return indexPair.first < shape.first && indexPair.second < shape.second
+               && indexPair.first >= 0 && indexPair.second >= 0;
     }
 
 

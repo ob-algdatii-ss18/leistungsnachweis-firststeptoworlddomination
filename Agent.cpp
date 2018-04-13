@@ -42,16 +42,16 @@ void Agent::playGame() {
     //cout << "rewards: \n" << environment.toString_RW() << endl;
     while (!finished) {
         int a = choseAction();
-        //cout << "\ncurrent state: " << currentState.first << "," << currentState.second << endl << "action: " << a << endl;
+        cout << "\ncurrent state: " << currentState.first << "," << currentState.second << endl << "action: " << a << endl;
         Environment::Response* response = environment.step(a);
         updateQValues(response);
         currentState = pair<int,int>(*response->state); //{response.state.first, response.state.second};
         finished = response->finished;
         counter++;
-        delete response;
+        //delete response;//@todo this caused crashes
     }
     cout << "step counter:" << counter << endl;
-    //cout << qValues->toString() << endl << endl;
+    cout << qValues->toString() << endl << endl;
 }
 
 
@@ -59,15 +59,12 @@ void Agent::updateQValues(Environment::Response *response) {
     //cout << response->toString() << endl;
     //cout << "state: " << currentState.first << " " << currentState.second << endl;
     double q = (*qValues)[currentState];
-    //cout << "q1:" << q << endl;
     pair<double, int>* maxExp = maxExpected(response->state);
     //cout << "maxExp: " << maxExp->first << "/" << maxExp->second << endl;
 
     q += learningRate * (response->reward + discountRate * maxExp->first) - q;
 
-    cout << maxExp->first << endl; //@todo stuff
     cout << "diff: " << learningRate * (response->reward + discountRate * maxExp->first) - q << endl;
-    //cout << "q2:" << q << endl;
     qValues->setQValue(currentState, q);
     delete maxExp;
 }
