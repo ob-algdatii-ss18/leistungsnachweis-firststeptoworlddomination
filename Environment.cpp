@@ -38,10 +38,13 @@ Environment::Response* Environment::step(int action) {
         agentPosition = tmp;
     }
 
-    tmp = {agentPosition.first, agentPosition.second + 1};
+    tmp = {agentPosition.first, agentPosition.second - 1};
     if (action == 3 && agentPosition.second > 0 && playingGround[tmp] != 0) {
         agentPosition = tmp;
     }
+
+    vector<int>* actions = new vector<int> {};
+    if()
 
     bool finished = false;
     if (playingGround[agentPosition] == -1)
