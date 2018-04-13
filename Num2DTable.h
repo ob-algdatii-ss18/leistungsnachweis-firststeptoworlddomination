@@ -21,10 +21,12 @@ class Num2DTable {
         //cout << "indexPair: " << indexPair.first << "/" << indexPair.second << endl;
         //cout << "shape: " << shape.first << "/" << shape.second << endl;
         //if(indexPair.first >= shape.first || indexPair.second >= shape.second) {
-        if(!validAccess(indexPair)) {
+        if(!keyExists(indexPair)) {
             cout << "crap " << indexPair.first << " " << indexPair.second << endl;
             throw 20;
         }
+        //cout << "pair " << indexPair.first << " " << indexPair.second << "index: "
+        //     << indexPair.first * shape.second + indexPair.second<<endl;
         return indexPair.first * shape.second + indexPair.second;
     }
 
@@ -36,7 +38,11 @@ public:
 
     Num2DTable(pair<int,int> size) {
         shape = pair<int,int>(size);
-        values = vector<double> (shape.first * shape.second);
+        int length = shape.first * shape.second;
+        values = vector<double> (length);
+        for (int i = 0; i < length; i++) {
+            values[i] = 0;
+        }
     }
 
     Num2DTable(pair<int,int> size, vector<double> values) {
@@ -54,8 +60,8 @@ public:
         values[getIndex(index)] = value;
     }
 
-    bool validAccess (pair<int, int> indexPair) {
-        return indexPair.first < shape.first || indexPair.second < shape.second;
+    bool keyExists(pair<int, int> indexPair) {
+        return indexPair.first < shape.first && indexPair.second < shape.second;
     }
 
 

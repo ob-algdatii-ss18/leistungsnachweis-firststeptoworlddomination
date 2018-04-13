@@ -25,22 +25,26 @@ Environment::Response* Environment::step(int action) {
     //move the agent
     //@todo use valid access?
     pair<int, int> tmp {agentPosition.first - 1, agentPosition.second};
-    if (action == 0 && agentPosition.first > 0 && playingGround[tmp] != 0) {
+    //if (action == 0 && agentPosition.first > 0 && playingGround[tmp] != 0) {
+    if (action == 0 && playingGround.keyExists(tmp) && playingGround[tmp] != 0) {
         agentPosition = tmp;
     }
 
     tmp = {agentPosition.first + 1, agentPosition.second};
-    if (action == 2 && agentPosition.first < shape.first-1 && playingGround[tmp] != 0){
+    //if (action == 2 && agentPosition.first < shape.first-1 && playingGround[tmp] != 0){
+    if (action == 2 && playingGround.keyExists(tmp) && playingGround[tmp] != 0){
         agentPosition = tmp;
     }
 
     tmp = {agentPosition.first, agentPosition.second + 1};
-    if (action == 1 && agentPosition.second < shape.second-1 && playingGround[tmp] != 0) {
+    //if (action == 1 && agentPosition.second < shape.second-1 && playingGround[tmp] != 0) {
+    if (action == 1 && playingGround.keyExists(tmp) && playingGround[tmp] != 0) {
         agentPosition = tmp;
     }
 
     tmp = {agentPosition.first, agentPosition.second + 1};
-    if (action == 3 && agentPosition.second > 0 && playingGround[tmp] != 0) {
+    //if (action == 3 && agentPosition.second > 0 && playingGround[tmp] != 0) {
+    if (action == 3 && playingGround.keyExists(tmp) && playingGround[tmp] != 0) {
         agentPosition = tmp;
     }
     //cout << "agent pos: " << agentPosition.first <<","<<agentPosition.second<<endl;

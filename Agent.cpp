@@ -74,35 +74,35 @@ void Agent::updateQValues(Environment::Response *response) {
 
 pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 
-    double maxVal = -100000; //@todo ugly thing, since hard coded lower bound
+    double maxVal = -100000.0; //@todo ugly thing, since hard coded lower bound
     //cout << "maxVal: " << maxVal << endl;
     int action = 0;
 
     pair<int, int> testAt = pair<int, int>{state->first, state->second - 1};
     //cout << "testAt: " << testAt.first << "/" << testAt.second << endl;
-    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
+    if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
         //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 0;
     }
 
     testAt = pair<int, int>{state->first, state->second + 1};
-    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
+    if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
+        //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 1;
     }
 
 
     testAt = pair<int, int>{state->first + 1, state->second};
-
-    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
+    if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
         //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 2;
     }
 
     testAt = pair<int, int>{state->first - 1, state->second};
-    if (qValues->validAccess(testAt) && (*qValues)[testAt] > maxVal) {
+    if (qValues->keyExists(testAt) && (*qValues)[testAt] > maxVal) {
         maxVal = (*qValues)[testAt];
         //cout << "z: " << (*qValues)[testAt]<< endl;
         action = 3;

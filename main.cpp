@@ -5,8 +5,8 @@
 using namespace std;
 
 int main() {
-    Agent a = Agent(0.01, 0.9, 0.8);
-    a.fit(10);
+    Agent a = Agent(0.40, 0.9, 0.8);
+    a.fit(110);
     cout << "main done" << endl;
     return 0;
 }
