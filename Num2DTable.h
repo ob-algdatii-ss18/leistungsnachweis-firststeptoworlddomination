@@ -20,21 +20,29 @@ class Num2DTable {
     int getIndex(pair<int,int> indexPair) {
         //cout << "indexPair: " << indexPair.first << "/" << indexPair.second << endl;
         //cout << "shape: " << shape.first << "/" << shape.second << endl;
-        if(indexPair.first > shape.first + 1|| indexPair.second > shape.second + 1) {
-            //cout << "crap " << indexPair.first << " " << indexPair.second << endl;
+        //if(indexPair.first >= shape.first || indexPair.second >= shape.second) {
+        if(!keyExists(indexPair)) {
+            cout << "crap " << indexPair.first << " " << indexPair.second << endl;
             throw 20;
         }
+        //cout << "pair " << indexPair.first << " " << indexPair.second << "index: "
+        //     << indexPair.first * shape.second + indexPair.second<<endl;
         return indexPair.first * shape.second + indexPair.second;
     }
 
+    vector<double> values;
+
 public:
 
-    vector<double> values;
     pair<int,int> shape;
 
     Num2DTable(pair<int,int> size) {
         shape = pair<int,int>(size);
-        values = vector<double> (shape.first * shape.second);
+        int length = shape.first * shape.second;
+        values = vector<double> (length);
+        for (int i = 0; i < length; i++) {
+            values[i] = 0;
+        }
     }
 
     Num2DTable(pair<int,int> size, vector<double> values) {
@@ -50,6 +58,10 @@ public:
 
     void setQValue(pair<int, int> index, double value) {
         values[getIndex(index)] = value;
+    }
+
+    bool keyExists(pair<int, int> indexPair) {
+        return indexPair.first < shape.first && indexPair.second < shape.second;
     }
 
 
