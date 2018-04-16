@@ -23,6 +23,7 @@ class Agent {
     int environmentType;//not needed for now but will be as soon as we have different environments
     vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
     double explRate; //exploiting rate
+    int policy = 0; //policy for chosing actions
 
 public:
     /*
@@ -30,7 +31,7 @@ public:
      * @param learningRate
      * @param discountRate
      */
-    Agent(double learningRate, double discountRate, double explRate);
+    Agent(double learningRate, double discountRate, double explRate, int policy);
 
     /*
      * lets the agent learn from a given number of games
@@ -61,6 +62,9 @@ private:
     pair<double, int>* maxExpected(pair<int, int> *response);
 
 
+    int randomThreshold();
+
+    int softMax();
 };
 
 

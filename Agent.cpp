@@ -4,6 +4,7 @@
 #include <vector>
 #include "Agent.h"
 #include <cstdlib>
+#include <cmath>
 
 using namespace std;
 
@@ -24,12 +25,13 @@ void Agent::fit(int numberOfGames) {
     cout << valueFunction.toString() << endl << endl;
 }
 
-Agent::Agent(double learningRate, double discountRate, double explRate) {
+Agent::Agent(double learningRate, double discountRate, double explRate, int policy) {
     pair<int, int> size = global_qValueSize;
     this->valueFunction = Num2DTable(size); //@todo get size of game for this
     this->learningRate = learningRate;
     this->discountRate = discountRate;
     this->explRate = explRate;
+    this->policy = policy;
 }
 
 void Agent::playGame() {
@@ -91,6 +93,14 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 }
 
 int Agent::choseAction() {
+    if(policy == 0)
+        return randomThreshold();
+    if(policy == 1)
+        return softMax();
+    return -1;
+}
+
+int Agent::randomThreshold() {
     double p = ((double) rand() / (RAND_MAX));
 
     int result;
@@ -99,5 +109,47 @@ int Agent::choseAction() {
     } else {
         result = rand() % 4;
     }
-    return result;
+}
+
+int Agent::softMax() {
+    vector<int> actions {};
+    vector<double > softValues {};
+    double sum = 0;
+    double v;
+
+    pair<int, int> testAt = pair<int, int>{currentState.first, currentState.second - 1};
+    if (valueFunction.keyExists(testAt)) {
+        actions.push_back(0);
+        v = pow(M_E, valueFunction[testAt]);
+        softValues.push_back(v);
+        sum += v;
+    }
+    testAt = pair<int, int>{currentState.first, currentState.second + 1};
+    if (valueFunction.keyExists(testAt)) {
+        actions.push_back(1);
+        v = pow(M_E, valueFunction[testAt]);
+        softValues.push_back(v);
+        sum += v;
+    }
+
+
+    testAt = pair<int, int>{currentState.first + 1, currentState.second};
+    if (valueFunction.keyExists(testAt)) {
+        actions.push_back(2);
+        v = pow(M_E, valueFunction[testAt]);
+        softValues.push_back(v);
+        sum += v;
+    }
+
+    testAt = pair<int, int>{currentState.first - 1, currentState.second};
+    if (valueFunction.keyExists(testAt)) {
+        actions.push_back(3);
+        v = pow(M_E, valueFunction[testAt]);
+        softValues.push_back(v);
+        sum += v;
+    }
+
+    for(int i = 0; i < softValues.size(); i++) {
+        softValues[i] /= sum;
+    }
 }
