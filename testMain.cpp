@@ -1,3 +1,6 @@
+//
+// Created by Jonas on 16.04.2018.
+//
 #include <iostream>
 #include "Agent.h"
 #include "googletest/include/gtest/gtest.h"
@@ -5,9 +8,6 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    Agent a = Agent(0.40, 0.9, 0.8);
-    a.fit(1);
-    cout << "main done" << endl;
-
-    return 0;
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
