@@ -64,7 +64,7 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
     double maxVal = -100000.0; //@todo ugly thing, since hard coded lower bound
     int action = 0;
 
-    pair<int, int> testAt = pair<int, int>{state->first, state->second - 1};
+    pair<int, int> testAt = pair<int, int>{state->first - 1, state->second};
     if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
         maxVal = (valueFunction)[testAt];
         action = 0;
@@ -83,7 +83,7 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
         action = 2;
     }
 
-    testAt = pair<int, int>{state->first - 1, state->second};
+    testAt = pair<int, int>{state->first, state->second - 1};
     if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
         maxVal = (valueFunction)[testAt];
         action = 3;
@@ -112,27 +112,20 @@ int Agent::randomThreshold() {
 }
 
 int Agent::softMax() {
-    vector<int> actions {};
-    vector<double > softValues {};
-    double sum = 0;
-    double v;
+    vector<int> actions {};             //stores actions
+    vector<double > softValues {};      //stores weighted softmax values
+    double sum = 0;                     //stores the sum of the softmax values to normalize
+    double v;                           //stores the single value, just a temporal variable
 
-    pair<int, int> testAt = pair<int, int>{currentState.first, currentState.second - 1};
+    //up
+    pair<int, int> testAt = pair<int, int>{currentState.first - 1, currentState.second};
     if (valueFunction.keyExists(testAt)) {
-        actions.push_back(0);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
+        actions.push_back(0);                   //stores action
+        v = pow(M_E, valueFunction[testAt]);    //calculates the exponential softmax value
+        softValues.push_back(v);                //stores the softmax values
+        sum += v;                               //sum of all exponential functions to normalize the results
     }
-    testAt = pair<int, int>{currentState.first, currentState.second + 1};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(1);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
-    }
-
-
+    //down
     testAt = pair<int, int>{currentState.first + 1, currentState.second};
     if (valueFunction.keyExists(testAt)) {
         actions.push_back(2);
@@ -141,7 +134,17 @@ int Agent::softMax() {
         sum += v;
     }
 
-    testAt = pair<int, int>{currentState.first - 1, currentState.second};
+    //right
+    testAt = pair<int, int>{currentState.first, currentState.second + 1};
+    if (valueFunction.keyExists(testAt)) {
+        actions.push_back(1);
+        v = pow(M_E, valueFunction[testAt]);
+        softValues.push_back(v);
+        sum += v;
+    }
+
+    //left
+    testAt = pair<int, int>{currentState.first, currentState.second - 1};
     if (valueFunction.keyExists(testAt)) {
         actions.push_back(3);
         v = pow(M_E, valueFunction[testAt]);
@@ -149,7 +152,23 @@ int Agent::softMax() {
         sum += v;
     }
 
-    for(int i = 0; i < softValues.size(); i++) {
-        softValues[i] /= sum;
+    //this loop ensures that the probabilities of the softValues vector add up to one (normalization)
+    for (double &softValue : softValues) {
+        softValue /= sum;
     }
+
+    double p = ((double) rand() / (RAND_MAX));
+    int action = 0;//default value that will never be returned
+    double summedP = 0; //this values gieves the combined probability distribution for the actions
+    //this loop choses the action based on an random value p and the softmax distribution.
+    for (int i = 0; i < softValues.size(); i++) {
+        summedP += softValues[i];
+        if (p < summedP) {
+            action = actions[i];
+            break;
+        }
+    }
+
+    return action;
+
 }
