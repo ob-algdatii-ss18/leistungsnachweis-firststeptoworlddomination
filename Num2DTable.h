@@ -18,15 +18,10 @@ using namespace std;
 class Num2DTable {
 
     int getIndex(pair<int,int> indexPair) {
-        //cout << "indexPair: " << indexPair.first << "/" << indexPair.second << endl;
-        //cout << "shape: " << shape.first << "/" << shape.second << endl;
-        //if(indexPair.first >= shape.first || indexPair.second >= shape.second) {
         if(!keyExists(indexPair)) {
             cout << "crap " << indexPair.first << " " << indexPair.second << endl;
             throw 20;
         }
-        //cout << "pair " << indexPair.first << " " << indexPair.second << "index: "
-        //     << indexPair.first * shape.second + indexPair.second<<endl;
         return indexPair.first * shape.second + indexPair.second;
     }
 

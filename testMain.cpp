@@ -3,7 +3,8 @@
 //
 #include <iostream>
 #include "Agent.h"
-#include "googletest/include/gtest/gtest.h"
+//#include <googletest/include/gtest/gtest.h>
+#include <gtest/gtest.h>
 
 using namespace std;
 

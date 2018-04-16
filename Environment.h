@@ -11,7 +11,7 @@
 
 using namespace std;
 
-static const pair<int, int> QValueSize = {3, 4};//@todo this is nasty crap
+static const pair<int, int> global_qValueSize = {3, 4};//@todo this is nasty crap
 
 class Environment {
 
@@ -22,6 +22,10 @@ class Environment {
     Num2DTable rewards{pair<int, int>{3, 4},
                        {0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0}}; //possible rewards are saved here
     pair<int, int> agentPosition = pair<int, int>{2, 0};
+
+    bool validPosition(pair<int,int> index) {
+        return playingGround.keyExists(index) && playingGround[index] != 0;
+    }
 
 public:
 
@@ -34,6 +38,7 @@ public:
         double reward; //reward earned
         bool finished = false; //indicates if game is over
 
+        //constructor
         Response(pair<int, int> *state, vector<int> options, double reward, bool finished) {
             this->state = state;
             this->options = options;
@@ -41,6 +46,9 @@ public:
             this->finished = finished;
         }
 
+        /*
+         * generates formated string of the response object
+         */
         string toString() {
             std::stringstream ss;
             ss << setprecision(3) << fixed;
@@ -71,14 +79,23 @@ public:
      */
     void visualizeGame();
 
+    /*
+     * generates a formated string of numerical values of the play ground
+     */
     string toString_PG() {
         return playingGround.toString();
     }
 
+    /*
+     * generates a formated string of numerical values of the reward map
+     */
     string toString_RW() {
         return rewards.toString();
     }
 
+    /*
+     * gives the initial state of the agent in the environment
+     */
     pair<int, int> *initialState();
 };
 

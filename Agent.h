@@ -15,13 +15,14 @@ using namespace std;
 
 class Agent {
 
-    Num2DTable* qValues;
-    Environment environment;
+    Num2DTable* valueFunction; //q-values of the Agent (actually right now it's just a value function
+    Environment environment; //environment the agent lives in
     pair<int, int> currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
     double discountRate; //how much value is given to future rewards
     int environmentType;//not needed for now but will be as soon as we have different environments
-    //vector<int> actionCounter {};
+    vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
+    double explRate; //exploiting rate
 
 public:
     /*
@@ -39,15 +40,27 @@ public:
 
 private:
 
-    void updateQValues(Environment::Response *response);
+    /*
+     * updates q-values based on a response
+     */
+    void updateValueFunction(Environment::Response *response);
 
+    /*
+     * plays a single game
+     */
     void playGame();
 
+    /*
+     * strategy by which the agent choses his next action
+     */
     int choseAction();
 
+    /*
+     * gives back the maximal expected reward from a state given in a response
+     */
     pair<double, int>* maxExpected(pair<int, int> *response);
 
-    double explRate;
+
 };
 
 
