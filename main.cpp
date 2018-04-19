@@ -7,8 +7,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     Agent a = Agent(0.1, 0.9, 0.8, 0);
-    //a.fit(1000);
+    a.fit(100);
     cout << "main done" << endl;
-    cout << pow(M_E, 2)  <<endl;
     return 0;
 }
