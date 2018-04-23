@@ -56,6 +56,8 @@ void Agent::updateValueFunction(Environment::Response *response) {
     pair<double, int>* maxExp = maxExpected(response->state);
     q += learningRate * (response->reward + discountRate * maxExp->first - q);
     valueFunction.setQValue(currentState, q);
+    if (response->finished)
+        valueFunction.setQValue(*response->state, response->reward);
     delete maxExp;
 }
 

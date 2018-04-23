@@ -15,7 +15,7 @@ using namespace std;
 
 class Agent {
 
-    Num2DTable valueFunction; //q-values of the Agent (actually right now it's just a value function
+    Num2DTable valueFunction; //values of the Agent (actually right now it's just a value function)
     Environment environment; //environment the agent lives in
     pair<int, int> currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees

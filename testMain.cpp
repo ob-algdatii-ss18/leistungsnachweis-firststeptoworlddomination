@@ -7,6 +7,8 @@
 
 using namespace std;
 
+//tests here
+
 int main(int argc, char* argv[]) {
     cout << "start tests" << endl;
     ::testing::InitGoogleTest(&argc, argv);

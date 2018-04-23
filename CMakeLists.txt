@@ -15,9 +15,9 @@ include_directories(./googletest/include googletest)
 set(CMAKE_CXX_STANDARD 11 )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x -lpthread") # #-std=c++11")
 
-set(SOURCE_FILES Agent.cpp Agent.h Environment.cpp Environment.h Num2DTable.cpp Num2DTable.h)
+set(SOURCE_FILES Agent.cpp Agent.h Environment.cpp Environment.h Num2DTable.cpp Num2DTable.h qValues.h)
 
-add_executable(WD_Test testMain.cpp ${SOURCE_FILES} qValues.h )
+add_executable(WD_Test testMain.cpp ${SOURCE_FILES})
 add_executable(WorldDomination main.cpp ${SOURCE_FILES})
 target_link_libraries(WD_Test gtest gtest_main)
 #target_link_libraries(WD_Test googletest/include/gtest googletest/gtest_main)
