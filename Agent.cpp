@@ -8,6 +8,8 @@
 
 using namespace std;
 
+bool debugFlag = false;
+
 void Agent::fit(int numberOfGames) {
     cout << "Number of Games: " << numberOfGames << endl;
     for (int i = 0; i < numberOfGames; i++) {
@@ -45,13 +47,14 @@ void Agent::playGame() {
         finished = response->finished;
         counter++;
         delete response;//@todo this caused crashes for a while
+        if(debugFlag)
+            cout << valueFunction.toString() << endl << endl;
     }
     actionCounter.push_back(counter);
-    //cout << qValues->toString() << endl << endl;
 }
 
 
-void Agent::updateValueFunction(Environment::Response *response) {
+void Agent::updateQValueFunction(Environment::Response *response) {
     double q = valueFunction[currentState];
     pair<double, int>* maxExp = maxExpected(response->state);
     q += learningRate * (response->reward + discountRate * maxExp->first - q);
@@ -59,6 +62,17 @@ void Agent::updateValueFunction(Environment::Response *response) {
     if (response->finished)
         valueFunction.setQValue(*response->state, response->reward);
     delete maxExp;
+}
+
+
+void Agent::updateValueFunction(Environment::Response *response) {
+    double q = valueFunction[currentState];
+    //pair<double, int>* maxExp = maxExpected(response->state);
+    q += learningRate * (response->reward + discountRate * valueFunction[*response->state] - q);
+    valueFunction.setQValue(currentState, q);
+    if (response->finished)
+        valueFunction.setQValue(*response->state, response->reward);
+    //delete maxExp;
 }
 
 pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
@@ -173,4 +187,8 @@ int Agent::softMax() {
 
     return action;
 
+}
+
+void Agent::debug() {
+    debugFlag = !debugFlag;
 }

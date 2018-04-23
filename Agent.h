@@ -39,11 +39,15 @@ public:
      */
     void fit(int numberOfGames);
 
+    void debug();
+
 private:
 
     /*
      * updates q-values based on a response
      */
+    void updateQValueFunction(Environment::Response *response);
+
     void updateValueFunction(Environment::Response *response);
 
     /*

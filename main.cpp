@@ -6,8 +6,10 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    Agent a = Agent(0.1, 0.9, 0.8, 1);
+    Agent a = Agent(0.1, 0.8, 0.8, 1);
     a.fit(1000);
+    //a.debug();
+    //a.fit(1);
     cout << "main done" << endl;
     return 0;
 }
