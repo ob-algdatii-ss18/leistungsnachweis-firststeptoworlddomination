@@ -9,11 +9,14 @@
 #include <vector>
 #include "Environment.h"
 #include "Num2DTable.h"
+//#include "Policy.h"
 
 
 using namespace std;
 
 class Agent {
+
+    friend class Policy;
 
     Num2DTable valueFunction; //values of the Agent (actually right now it's just a value function)
     Environment environment; //environment the agent lives in
@@ -23,7 +26,8 @@ class Agent {
     int environmentType;//not needed for now but will be as soon as we have different environments
     vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
     double explRate; //exploiting rate
-    int policy = 0; //policy for chosing actions
+    int policyType = 0; //policy for chosing actions
+    Policy policy;
 
 public:
     /*

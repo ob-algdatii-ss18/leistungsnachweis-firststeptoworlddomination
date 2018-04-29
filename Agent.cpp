@@ -5,6 +5,7 @@
 #include "Agent.h"
 #include <cstdlib>
 #include <cmath>
+#include <rpcdcep.h>
 
 using namespace std;
 
@@ -33,14 +34,16 @@ Agent::Agent(double learningRate, double discountRate, double explRate, int poli
     this->learningRate = learningRate;
     this->discountRate = discountRate;
     this->explRate = explRate;
-    this->policy = policy;
+    this->policyType = policy;
+    this->policy = Policy(policyType, this);
 }
 
 void Agent::playGame() {
     bool finished = false;
     int counter = 0;
     while (!finished) {
-        int a = choseAction();
+        //int a = choseAction();
+        int a = policy.choseAction();
         Environment::Response* response = environment.step(a);
         updateValueFunction(response);
         currentState = pair<int,int>(*response->state);
@@ -109,9 +112,9 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 }
 
 int Agent::choseAction() {
-    if(policy == 0)
+    if(policyType == 0)
         return randomThreshold();
-    if(policy == 1)
+    if(policyType == 1)
         return softMax();
     return -1;
 }
