@@ -168,7 +168,5 @@ int Agent::softMax() {
             break;
         }
     }
-
     return action;
-
 }
