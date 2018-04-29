@@ -9,13 +9,16 @@
 #include <vector>
 #include "Environment.h"
 #include "Num2DTable.h"
+//#include "Policy.h"
 
 
 using namespace std;
 
 class Agent {
 
-    Num2DTable valueFunction; //q-values of the Agent (actually right now it's just a value function
+    friend class Policy;
+
+    Num2DTable valueFunction; //values of the Agent (actually right now it's just a value function)
     Environment environment; //environment the agent lives in
     pair<int, int> currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
@@ -23,7 +26,8 @@ class Agent {
     int environmentType;//not needed for now but will be as soon as we have different environments
     vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
     double explRate; //exploiting rate
-    int policy = 0; //policy for chosing actions
+    int policyType = 0; //policy for chosing actions
+    Policy policy;
 
 public:
     /*
@@ -39,11 +43,15 @@ public:
      */
     void fit(int numberOfGames);
 
+    void debug();
+
 private:
 
     /*
      * updates q-values based on a response
      */
+    void updateQValueFunction(Environment::Response *response);
+
     void updateValueFunction(Environment::Response *response);
 
     /*

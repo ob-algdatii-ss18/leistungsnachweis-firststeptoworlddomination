@@ -5,8 +5,11 @@
 #include "Agent.h"
 #include <cstdlib>
 #include <cmath>
+#include <rpcdcep.h>
 
 using namespace std;
+
+bool debugFlag = false;
 
 void Agent::fit(int numberOfGames) {
     cout << "Number of Games: " << numberOfGames << endl;
@@ -31,32 +34,48 @@ Agent::Agent(double learningRate, double discountRate, double explRate, int poli
     this->learningRate = learningRate;
     this->discountRate = discountRate;
     this->explRate = explRate;
-    this->policy = policy;
+    this->policyType = policy;
+    this->policy = Policy(policyType, this);
 }
 
 void Agent::playGame() {
     bool finished = false;
     int counter = 0;
     while (!finished) {
-        int a = choseAction();
+        //int a = choseAction();
+        int a = policy.choseAction();
         Environment::Response* response = environment.step(a);
         updateValueFunction(response);
         currentState = pair<int,int>(*response->state);
         finished = response->finished;
         counter++;
         delete response;//@todo this caused crashes for a while
+        if(debugFlag)
+            cout << valueFunction.toString() << endl << endl;
     }
     actionCounter.push_back(counter);
-    //cout << qValues->toString() << endl << endl;
+}
+
+
+void Agent::updateQValueFunction(Environment::Response *response) {
+    double q = valueFunction[currentState];
+    pair<double, int>* maxExp = maxExpected(response->state);
+    q += learningRate * (response->reward + discountRate * maxExp->first - q);
+    valueFunction.setQValue(currentState, q);
+    if (response->finished)
+        valueFunction.setQValue(*response->state, response->reward);
+    delete maxExp;
 }
 
 
 void Agent::updateValueFunction(Environment::Response *response) {
     double q = valueFunction[currentState];
-    pair<double, int>* maxExp = maxExpected(response->state);
-    q += learningRate * (response->reward + discountRate * maxExp->first - q);
+    //pair<double, int>* maxExp = maxExpected(response->state);
+    q += learningRate * (response->reward + discountRate * valueFunction[*response->state] - q);
     valueFunction.setQValue(currentState, q);
-    delete maxExp;
+    if (response->finished)
+        valueFunction.setQValue(*response->state, response->reward);
+    //delete maxExp;
 }
 
 pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
@@ -93,9 +112,9 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 }
 
 int Agent::choseAction() {
-    if(policy == 0)
+    if(policyType == 0)
         return randomThreshold();
-    if(policy == 1)
+    if(policyType == 1)
         return softMax();
     return -1;
 }
@@ -169,4 +188,8 @@ int Agent::softMax() {
         }
     }
     return action;
+}
+
+void Agent::debug() {
+    debugFlag = !debugFlag;
 }
