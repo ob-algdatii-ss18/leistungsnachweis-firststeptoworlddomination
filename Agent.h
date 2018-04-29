@@ -27,7 +27,7 @@ class Agent {
     vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
     double explRate; //exploiting rate
     int policyType = 0; //policy for chosing actions
-    Policy policy;
+    //Policy policy;
 
 public:
     /*
