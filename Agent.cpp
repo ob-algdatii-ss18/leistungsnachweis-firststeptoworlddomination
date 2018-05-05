@@ -128,6 +128,7 @@ int Agent::randomThreshold() {
     } else {
         result = rand() % 4;
     }
+    return result;
 }
 
 int Agent::softMax() {

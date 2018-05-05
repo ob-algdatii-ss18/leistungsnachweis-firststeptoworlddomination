@@ -51,6 +51,10 @@ public:
         return values[getIndex(index)];
     }
 
+    /*void operator(const pair<int,int> index, values) {
+        values[getIndex(index)] = value;
+    }*/
+
     void setQValue(pair<int, int> index, double value) {
         values[getIndex(index)] = value;
     }
