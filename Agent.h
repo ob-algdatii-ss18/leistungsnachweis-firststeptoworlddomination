@@ -69,10 +69,29 @@ private:
      */
     pair<double, int>* maxExpected(pair<int, int> *response);
 
-
+    /*
+     * Chooses an action.
+     * Based
+     */
     int randomThreshold();
 
+    /*
+     * implementation of a softmax evaluation of the actions
+     * @todo probably it would be smart to change it to an array of values given to the function that is evaluated
+     * @todo instead of using the agents values. Therefore it could be used for the value- and the q-value function
+     */
     int softMax();
+};
+
+class ValueAgent : Agent {
+
+public:
+    ValueAgent (double learningRate, double discountRate, double explRate, int policy) : Agent (learningRate, discountRate, explRate, policy) {
+
+    }
+
+
+
 };
 
 
