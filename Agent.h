@@ -52,10 +52,13 @@ private:
 
 
     /*
-     * updates q-values based on a response
+     * updates q-values
      */
     void updateQValueFunction(Environment::Response *response);
 
+    /*
+     * update value function
+     */
     void updateValueFunction(Environment::Response *response);
 
     /*
@@ -71,18 +74,15 @@ private:
     /*
      * gives back the maximal expected reward from a state given in a response
      */
-    pair<double, int> *maxExpected(pair<int, int> *response, vector<int> *possibleActions);
+    pair<double, int>* maxExpected(pair<int, int> *response, vector<int> *possibleActions);
 
     /*
-     * Chooses an action.
-     * Based
+     * Chooses an action with fixed probablility for random action
      */
     int randomThreshold(vector<int> *possibleActions);
 
     /*
      * implementation of a softmax evaluation of the actions
-     * @todo probably it would be smart to change it to an array of values given to the function that is evaluated
-     * @todo instead of using the agents values. Therefore it could be used for the value- and the q-value function
      */
     int softMax(vector<int> *possibleActions);
 };

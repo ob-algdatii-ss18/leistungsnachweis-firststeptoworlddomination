@@ -8,8 +8,7 @@
 using namespace std;
 
 pair<int, int> *Environment::initialState() {
-    pair<int, int> *result = new pair<int, int>{2, 0};//change it to random later on
-    return result;//fixed initial state
+    return new pair<int, int>{2, 0};//fixed initial state
 }
 
 Environment::Response* Environment::step(int action) {
@@ -28,8 +27,7 @@ Environment::Response* Environment::step(int action) {
         finished = true;
     gameRecord.push_back(playingGround);
     actionRecord.push_back(action);
-    Response* result = new Environment::Response(&agentPosition, *getActions(), rewards[agentPosition], finished);
-    return result;
+    return new Environment::Response(&agentPosition, *getActions(), rewards[agentPosition], finished);
 }
 
 void Environment::visualizeGame() {

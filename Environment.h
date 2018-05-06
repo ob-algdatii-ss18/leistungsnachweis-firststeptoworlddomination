@@ -101,7 +101,7 @@ public:
     pair<int, int> *initialState();
 
     /*
-     *
+     * gives back the state corresponding to the result of an action taken from the current agent state
      */
     pair<int, int>* getStateByAction(int action);
 };

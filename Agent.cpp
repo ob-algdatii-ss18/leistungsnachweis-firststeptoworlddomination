@@ -98,8 +98,7 @@ pair<double, int> * Agent::maxExpected(pair<int, int> *state, vector<int> *possi
         }
     }
 
-    auto result = new pair<double, int>{maxVal, action};
-    return result;
+    return new pair<double, int>{maxVal, action};
 }
 
 int Agent::choseAction(vector<int> *possibleActions) {
