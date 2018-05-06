@@ -15,16 +15,13 @@ bool debugFlag = false;
 void Agent::fit(int numberOfGames) {
     cout << "Number of Games: " << numberOfGames << endl;
     for (int i = 0; i < numberOfGames; i++) {
-        //cout << "epoch: " << i << endl;
         environment = Environment();
 
         pair<int,int>* initState = environment.initialState();
         currentState = pair<int,int>(*initState);
         delete initState;
 
-        //cout << "Start Game" << endl;
         playGame();
-        //cout << "finished game" << endl << endl;
     }
     cout << valueFunction.toString() << endl << endl;
 }
@@ -44,12 +41,9 @@ void Agent::playGame() {
     int counter = 0;
     vector<int>* possibleActions = environment.getActions();
 
-    // @todo actions = environment.getActions();
     while (!finished) {
-        //@todo add possible actions to "choseAction", rearrange code for that
-        //int a = choseAction(response->actions);
         int a = choseAction(possibleActions);
-        //delete possibleActions;
+        delete possibleActions;
         //int a = policy.choseAction();
         Environment::Response* response = environment.step(a);
         updateValueFunction(response);
@@ -57,7 +51,7 @@ void Agent::playGame() {
         finished = response->finished;
         possibleActions = new vector<int> {response->options};
         counter++;
-        delete response;//@todo this caused crashes for a while
+        delete response;
         if(debugFlag)
             cout << valueFunction.toString() << endl << endl;
     }
@@ -78,12 +72,10 @@ void Agent::updateQValueFunction(Environment::Response *response) {
 
 void Agent::updateValueFunction(Environment::Response *response) {
     double q = valueFunction[currentState];
-    //pair<double, int>* maxExp = maxExpected(response->state);
     q += learningRate * (response->reward + discountRate * valueFunction[*response->state] - q);
     valueFunction.setQValue(currentState, q);
     if (response->finished)
         valueFunction.setQValue(*response->state, response->reward);
-    //delete maxExp;
 }
 
 //@todo add "possible actions"
