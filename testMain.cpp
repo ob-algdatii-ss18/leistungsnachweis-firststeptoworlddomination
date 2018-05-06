@@ -40,7 +40,7 @@ TEST(AgentTest, FirstMaxValueMustBeZero)
     agent.valueFunction.setQValue(testAtLeft, 4);*/
     // <maxValue, action>
     pair<double, int> *expected = new pair<double, int>{3, 3};
-    EXPECT_EQ(*expected, *(agent.maxExpected(initialState)));
+    EXPECT_EQ(*expected, *(agent.maxExpected(initialState, nullptr)));
 }
 /*TEST(AgentTest, HigherMaxValueOnRightSide)
 {

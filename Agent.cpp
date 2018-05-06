@@ -42,16 +42,20 @@ Agent::Agent(double learningRate, double discountRate, double explRate, int poli
 void Agent::playGame() {
     bool finished = false;
     int counter = 0;
+    vector<int>* possibleActions = environment.getActions();
+
     // @todo actions = environment.getActions();
     while (!finished) {
         //@todo add possible actions to "choseAction", rearrange code for that
         //int a = choseAction(response->actions);
-        int a = choseAction();
+        int a = choseAction(possibleActions);
+        //delete possibleActions;
         //int a = policy.choseAction();
         Environment::Response* response = environment.step(a);
         updateValueFunction(response);
         currentState = pair<int,int>(*response->state);
         finished = response->finished;
+        possibleActions = new vector<int> {response->options};
         counter++;
         delete response;//@todo this caused crashes for a while
         if(debugFlag)
@@ -63,7 +67,7 @@ void Agent::playGame() {
 
 void Agent::updateQValueFunction(Environment::Response *response) {
     double q = valueFunction[currentState];
-    pair<double, int>* maxExp = maxExpected(response->state);
+    pair<double, int>* maxExp = maxExpected(response->state, nullptr);
     q += learningRate * (response->reward + discountRate * maxExp->first - q);
     valueFunction.setQValue(currentState, q);
     if (response->finished)
@@ -83,13 +87,11 @@ void Agent::updateValueFunction(Environment::Response *response) {
 }
 
 //@todo add "possible actions"
-pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
-
+pair<double, int> * Agent::maxExpected(pair<int, int> *state, vector<int> *possibleActions) {
     double maxVal = -100000.0; //@todo ugly thing, since hard coded lower bound
     int action = 0;
 
-
-    for(int a = 0; a < 4; a++) {
+    for(int a : *possibleActions) {
         try {
             auto testAt = environment.getStateByAction(a);
             if((valueFunction)[*testAt] > maxVal) {
@@ -108,33 +110,33 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
     return result;
 }
 
-int Agent::choseAction() {
+int Agent::choseAction(vector<int> *possibleActions) {
     if(policyType == 0)
-        return randomThreshold();
+        return randomThreshold(possibleActions);
     if(policyType == 1)
-        return softMax();
-    return -1;
+        return softMax(possibleActions);
+    throw 20;
 }
 
-int Agent::randomThreshold() {
+int Agent::randomThreshold(vector<int> *possibleActions) {
     double p = ((double) rand() / (RAND_MAX));
 
     int result;
     if (p < explRate) {
-        result = maxExpected(&currentState)->second;
+        result = maxExpected(&currentState, possibleActions)->second;
     } else {
-        result = rand() % 4;
+        result = (*possibleActions)[rand() % possibleActions->size()];
     }
     return result;
 }
 
-int Agent::softMax() {
-    vector<int> actions {};             //stores actions
-    vector<double > softValues {};      //stores weighted softmax values
-    double sum = 0;                     //stores the sum of the softmax values to normalize
-    double v;                           //stores the single value, just a temporal variable
+int Agent::softMax(vector<int> *possibleActions) {
+    vector<int> actions {};
+    vector<double > softValues {};
+    double sum = 0;
+    double v;
 
-    for (int a = 0; a < 4; a++) {
+    for (int a : *possibleActions) {
         try {
             auto testAt = environment.getStateByAction(a);
             actions.push_back(a);                   //stores action

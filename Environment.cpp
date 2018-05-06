@@ -67,12 +67,14 @@ void Environment::visualizeGame() {
 vector<int>* Environment::getActions() {
     //@todo use it somewhere
     vector<int>* actions = new vector<int> {};
-
-    for(int a = 0; a < 0; a++) {
+    //cout << "reached getActions"<<endl;
+    for(int a = 0; a < 4; a++) {
         try {
+            //cout<<"try "<<a<<endl;
             getStateByAction(a);//variable not needed just call it so it raises an exception if not valid
             actions->push_back(a);
         } catch (int e) {
+            //cout<<"catch"<<endl;
             if(e != 21)
                 throw e;
         }
