@@ -59,6 +59,18 @@ public:
         values[getIndex(index)] = value;
     }
 
+    // needed for google tests
+    void setQValues(pair<int, int> *agentIndex, double values[]){
+        //up
+        setQValue({agentIndex->first-1, agentIndex->second},values[0]);
+        //right
+        setQValue({agentIndex->first, agentIndex->second+1},values[1]);
+        //down
+        setQValue({agentIndex->first+1, agentIndex->second},values[2]);
+        //left
+        setQValue({agentIndex->first, agentIndex->second-1},values[3]);
+    }
+
     bool keyExists(pair<int, int> indexPair) {
         return indexPair.first < shape.first && indexPair.second < shape.second
                && indexPair.first >= 0 && indexPair.second >= 0;

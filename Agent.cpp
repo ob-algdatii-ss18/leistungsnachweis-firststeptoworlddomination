@@ -5,6 +5,7 @@
 #include "Agent.h"
 #include <cstdlib>
 #include <cmath>
+#include "gtest/gtest.h"
 //#include <rpcdcep.h>
 
 using namespace std;
@@ -41,7 +42,10 @@ Agent::Agent(double learningRate, double discountRate, double explRate, int poli
 void Agent::playGame() {
     bool finished = false;
     int counter = 0;
+    // @todo actions = environment.getActions();
     while (!finished) {
+        //@todo add possible actions to "choseAction", rearrange code for that
+        //int a = choseAction(response->actions);
         int a = choseAction();
         //int a = policy.choseAction();
         Environment::Response* response = environment.step(a);
@@ -78,30 +82,35 @@ void Agent::updateValueFunction(Environment::Response *response) {
     //delete maxExp;
 }
 
+//@todo add "possible actions"
 pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
 
     double maxVal = -100000.0; //@todo ugly thing, since hard coded lower bound
     int action = 0;
 
+    // up
     pair<int, int> testAt = pair<int, int>{state->first - 1, state->second};
+    //@todo intead of keyExist use validState
     if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
         maxVal = (valueFunction)[testAt];
         action = 0;
     }
 
+    // right
     testAt = pair<int, int>{state->first, state->second + 1};
     if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
         maxVal = (valueFunction)[testAt];
         action = 1;
     }
 
-
+    // down
     testAt = pair<int, int>{state->first + 1, state->second};
     if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
         maxVal = (valueFunction)[testAt];
         action = 2;
     }
 
+    // left
     testAt = pair<int, int>{state->first, state->second - 1};
     if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
         maxVal = (valueFunction)[testAt];
@@ -137,7 +146,6 @@ int Agent::softMax() {
     double sum = 0;                     //stores the sum of the softmax values to normalize
     double v;                           //stores the single value, just a temporal variable
 
-    //up
     pair<int, int> testAt = pair<int, int>{currentState.first - 1, currentState.second};
     if (valueFunction.keyExists(testAt)) {
         actions.push_back(0);                   //stores action
@@ -145,7 +153,7 @@ int Agent::softMax() {
         softValues.push_back(v);                //stores the softmax values
         sum += v;                               //sum of all exponential functions to normalize the results
     }
-    //down
+
     testAt = pair<int, int>{currentState.first + 1, currentState.second};
     if (valueFunction.keyExists(testAt)) {
         actions.push_back(2);
@@ -154,7 +162,6 @@ int Agent::softMax() {
         sum += v;
     }
 
-    //right
     testAt = pair<int, int>{currentState.first, currentState.second + 1};
     if (valueFunction.keyExists(testAt)) {
         actions.push_back(1);
@@ -163,7 +170,6 @@ int Agent::softMax() {
         sum += v;
     }
 
-    //left
     testAt = pair<int, int>{currentState.first, currentState.second - 1};
     if (valueFunction.keyExists(testAt)) {
         actions.push_back(3);

@@ -9,6 +9,7 @@
 #include <vector>
 #include "Environment.h"
 #include "Num2DTable.h"
+#include "gtest/gtest.h"
 //#include "Policy.h"
 
 
@@ -46,6 +47,9 @@ public:
     void debug();
 
 private:
+    FRIEND_TEST(AgentTest, FirstMaxValueMustBeZero);
+    FRIEND_TEST(AgentTest, HigherMaxValueOnRightSide);
+
 
     /*
      * updates q-values based on a response

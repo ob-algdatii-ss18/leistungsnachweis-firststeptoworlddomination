@@ -49,6 +49,7 @@ Environment::Response* Environment::step(int action) {
     if(validPosition({agentPosition.first, agentPosition.second - 1})){
         actions.push_back(3);
     }
+    //@todo actions = *getActions();
 
     bool finished = false;
     if (playingGround[agentPosition] == -1)
@@ -61,5 +62,23 @@ Environment::Response* Environment::step(int action) {
 
 void Environment::visualizeGame() {
     //@todo visualize gameRecord
+}
+
+vector<int>* Environment::getActions() {
+    //@todo use it somewhere
+    vector<int>* actions = new vector<int> {};
+    if(validPosition({agentPosition.first - 1, agentPosition.second})){
+        actions->push_back(0);
+    }
+    if(validPosition({agentPosition.first + 1, agentPosition.second})){
+        actions->push_back(2);
+    }
+    if(validPosition({agentPosition.first, agentPosition.second + 1})){
+        actions->push_back(1);
+    }
+    if(validPosition({agentPosition.first, agentPosition.second - 1})){
+        actions->push_back(3);
+    }
+    return actions;
 }
 

@@ -93,6 +93,8 @@ public:
         return rewards.toString();
     }
 
+    vector<int>* getActions();
+
     /*
      * gives the initial state of the agent in the environment
      */
