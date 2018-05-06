@@ -67,18 +67,38 @@ void Environment::visualizeGame() {
 vector<int>* Environment::getActions() {
     //@todo use it somewhere
     vector<int>* actions = new vector<int> {};
-    if(validPosition({agentPosition.first - 1, agentPosition.second})){
-        actions->push_back(0);
-    }
-    if(validPosition({agentPosition.first + 1, agentPosition.second})){
-        actions->push_back(2);
-    }
-    if(validPosition({agentPosition.first, agentPosition.second + 1})){
-        actions->push_back(1);
-    }
-    if(validPosition({agentPosition.first, agentPosition.second - 1})){
-        actions->push_back(3);
+
+    for(int a = 0; a < 0; a++) {
+        try {
+            getStateByAction(a);//variable not needed just call it so it raises an exception if not valid
+            actions->push_back(a);
+        } catch (int e) {
+            if(e != 21)
+                throw e;
+        }
     }
     return actions;
+}
+
+pair<int, int> *Environment::getStateByAction(int action) {
+    if(action < 0 || action > 3)
+        throw 20;
+    pair<int,int>* result;
+    if(action == 0){
+        result = new pair<int,int> {agentPosition.first - 1, agentPosition.second};
+    }
+    else if(action == 1){
+        result = new pair<int,int> {agentPosition.first, agentPosition.second + 1};
+    }
+    else if(action == 2){
+        result = new pair<int,int> {agentPosition.first + 1, agentPosition.second};
+    }
+    else if(action == 3){
+        result = new pair<int,int> {agentPosition.first, agentPosition.second - 1};
+    }
+    if (!validPosition( *result)) {
+        throw 21;
+    }
+    return result;
 }
 

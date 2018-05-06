@@ -99,6 +99,11 @@ public:
      * gives the initial state of the agent in the environment
      */
     pair<int, int> *initialState();
+
+    /*
+     *
+     */
+    pair<int, int>* getStateByAction(int action);
 };
 
 #endif //WORLDDOMINATION_ENVIRONMENT_H

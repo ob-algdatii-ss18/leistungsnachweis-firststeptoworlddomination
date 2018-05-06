@@ -88,35 +88,23 @@ pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
     double maxVal = -100000.0; //@todo ugly thing, since hard coded lower bound
     int action = 0;
 
-    // up
-    pair<int, int> testAt = pair<int, int>{state->first - 1, state->second};
-    //@todo intead of keyExist use validState
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 0;
+
+    for(int a = 0; a < 4; a++) {
+        try {
+            auto testAt = environment.getStateByAction(a);
+            if((valueFunction)[*testAt] > maxVal) {
+                maxVal = (valueFunction)[*testAt];
+                action = a;
+            }
+            delete testAt;
+        } catch (int e) {
+            //ignoring 21 errors, throwing all others
+            if(e != 21)  //error 21: invalid action
+                throw e;
+        }
     }
 
-    // right
-    testAt = pair<int, int>{state->first, state->second + 1};
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 1;
-    }
-
-    // down
-    testAt = pair<int, int>{state->first + 1, state->second};
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 2;
-    }
-
-    // left
-    testAt = pair<int, int>{state->first, state->second - 1};
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 3;
-    }
-    auto* result = new pair<double, int>{maxVal, action};
+    auto result = new pair<double, int>{maxVal, action};
     return result;
 }
 
@@ -146,36 +134,19 @@ int Agent::softMax() {
     double sum = 0;                     //stores the sum of the softmax values to normalize
     double v;                           //stores the single value, just a temporal variable
 
-    pair<int, int> testAt = pair<int, int>{currentState.first - 1, currentState.second};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(0);                   //stores action
-        v = pow(M_E, valueFunction[testAt]);    //calculates the exponential softmax value
-        softValues.push_back(v);                //stores the softmax values
-        sum += v;                               //sum of all exponential functions to normalize the results
-    }
-
-    testAt = pair<int, int>{currentState.first + 1, currentState.second};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(2);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
-    }
-
-    testAt = pair<int, int>{currentState.first, currentState.second + 1};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(1);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
-    }
-
-    testAt = pair<int, int>{currentState.first, currentState.second - 1};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(3);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
+    for (int a = 0; a < 4; a++) {
+        try {
+            auto testAt = environment.getStateByAction(a);
+            actions.push_back(a);                   //stores action
+            v = pow(M_E, valueFunction[*testAt]);    //calculates the exponential softmax value
+            softValues.push_back(v);                //stores the softmax values
+            sum += v;                               //sum of all exponential functions to normalize the results
+            delete testAt;
+        } catch (int e) {
+            //ignoring 21 errors, throwing all others
+            if(e != 21)  //error 21: invalid action
+                throw e;
+        }
     }
 
     //this loop ensures that the probabilities of the softValues vector add up to one (normalization)
