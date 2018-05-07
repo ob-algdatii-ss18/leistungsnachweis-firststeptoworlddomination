@@ -9,6 +9,7 @@
 #include <vector>
 #include "Environment.h"
 #include "Num2DTable.h"
+#include "gtest/gtest.h"
 //#include "Policy.h"
 
 
@@ -27,7 +28,7 @@ class Agent {
     vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
     double explRate; //exploiting rate
     int policyType = 0; //policy for chosing actions
-    Policy policy;
+    //Policy policy;
 
 public:
     /*
@@ -46,12 +47,18 @@ public:
     void debug();
 
 private:
+    FRIEND_TEST(AgentTest, FirstMaxValueMustBeZero);
+    FRIEND_TEST(AgentTest, HigherMaxValueOnRightSide);
+
 
     /*
-     * updates q-values based on a response
+     * updates q-values
      */
     void updateQValueFunction(Environment::Response *response);
 
+    /*
+     * update value function
+     */
     void updateValueFunction(Environment::Response *response);
 
     /*
@@ -62,17 +69,33 @@ private:
     /*
      * strategy by which the agent choses his next action
      */
-    int choseAction();
+    int choseAction(vector<int> *possibleActions);
 
     /*
      * gives back the maximal expected reward from a state given in a response
      */
-    pair<double, int>* maxExpected(pair<int, int> *response);
+    pair<double, int>* maxExpected(pair<int, int> *response, vector<int> *possibleActions);
+
+    /*
+     * Chooses an action with fixed probablility for random action
+     */
+    int randomThreshold(vector<int> *possibleActions);
+
+    /*
+     * implementation of a softmax evaluation of the actions
+     */
+    int softMax(vector<int> *possibleActions);
+};
+
+class ValueAgent : Agent {
+
+public:
+    ValueAgent (double learningRate, double discountRate, double explRate, int policy) : Agent (learningRate, discountRate, explRate, policy) {
+
+    }
 
 
-    int randomThreshold();
 
-    int softMax();
 };
 
 

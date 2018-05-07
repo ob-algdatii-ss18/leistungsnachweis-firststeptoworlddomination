@@ -5,7 +5,8 @@
 #include "Agent.h"
 #include <cstdlib>
 #include <cmath>
-#include <rpcdcep.h>
+#include "gtest/gtest.h"
+//#include <rpcdcep.h>
 
 using namespace std;
 
@@ -14,16 +15,13 @@ bool debugFlag = false;
 void Agent::fit(int numberOfGames) {
     cout << "Number of Games: " << numberOfGames << endl;
     for (int i = 0; i < numberOfGames; i++) {
-        //cout << "epoch: " << i << endl;
         environment = Environment();
 
         pair<int,int>* initState = environment.initialState();
         currentState = pair<int,int>(*initState);
         delete initState;
 
-        //cout << "Start Game" << endl;
         playGame();
-        //cout << "finished game" << endl << endl;
     }
     cout << valueFunction.toString() << endl << endl;
 }
@@ -35,21 +33,25 @@ Agent::Agent(double learningRate, double discountRate, double explRate, int poli
     this->discountRate = discountRate;
     this->explRate = explRate;
     this->policyType = policy;
-    this->policy = Policy(policyType, this);
+    //this->policy = Policy(policyType, this);
 }
 
 void Agent::playGame() {
     bool finished = false;
     int counter = 0;
+    vector<int>* possibleActions = environment.getActions();
+
     while (!finished) {
-        //int a = choseAction();
-        int a = policy.choseAction();
+        int a = choseAction(possibleActions);
+        delete possibleActions;
+        //int a = policy.choseAction();
         Environment::Response* response = environment.step(a);
         updateValueFunction(response);
         currentState = pair<int,int>(*response->state);
         finished = response->finished;
+        possibleActions = new vector<int> {response->options};
         counter++;
-        delete response;//@todo this caused crashes for a while
+        delete response;
         if(debugFlag)
             cout << valueFunction.toString() << endl << endl;
     }
@@ -59,7 +61,7 @@ void Agent::playGame() {
 
 void Agent::updateQValueFunction(Environment::Response *response) {
     double q = valueFunction[currentState];
-    pair<double, int>* maxExp = maxExpected(response->state);
+    pair<double, int>* maxExp = maxExpected(response->state, nullptr);
     q += learningRate * (response->reward + discountRate * maxExp->first - q);
     valueFunction.setQValue(currentState, q);
     if (response->finished)
@@ -70,105 +72,74 @@ void Agent::updateQValueFunction(Environment::Response *response) {
 
 void Agent::updateValueFunction(Environment::Response *response) {
     double q = valueFunction[currentState];
-    //pair<double, int>* maxExp = maxExpected(response->state);
     q += learningRate * (response->reward + discountRate * valueFunction[*response->state] - q);
     valueFunction.setQValue(currentState, q);
     if (response->finished)
         valueFunction.setQValue(*response->state, response->reward);
-    //delete maxExp;
 }
 
-pair<double, int>* Agent::maxExpected(pair<int, int> *state) {
-
+//@todo add "possible actions"
+pair<double, int> * Agent::maxExpected(pair<int, int> *state, vector<int> *possibleActions) {
     double maxVal = -100000.0; //@todo ugly thing, since hard coded lower bound
     int action = 0;
 
-    pair<int, int> testAt = pair<int, int>{state->first - 1, state->second};
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 0;
+    for(int a : *possibleActions) {
+        try {
+            auto testAt = environment.getStateByAction(a);
+            if((valueFunction)[*testAt] > maxVal) {
+                maxVal = (valueFunction)[*testAt];
+                action = a;
+            }
+            delete testAt;
+        } catch (int e) {
+            //ignoring 21 errors, throwing all others
+            if(e != 21)  //error 21: invalid action
+                throw e;
+        }
     }
 
-    testAt = pair<int, int>{state->first, state->second + 1};
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 1;
-    }
-
-
-    testAt = pair<int, int>{state->first + 1, state->second};
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 2;
-    }
-
-    testAt = pair<int, int>{state->first, state->second - 1};
-    if (valueFunction.keyExists(testAt) && (valueFunction)[testAt] > maxVal) {
-        maxVal = (valueFunction)[testAt];
-        action = 3;
-    }
-    auto* result = new pair<double, int>{maxVal, action};
-    return result;
+    return new pair<double, int>{maxVal, action};
 }
 
-int Agent::choseAction() {
+int Agent::choseAction(vector<int> *possibleActions) {
     if(policyType == 0)
-        return randomThreshold();
+        return randomThreshold(possibleActions);
     if(policyType == 1)
-        return softMax();
-    return -1;
+        return softMax(possibleActions);
+    throw 20;
 }
 
-int Agent::randomThreshold() {
+int Agent::randomThreshold(vector<int> *possibleActions) {
     double p = ((double) rand() / (RAND_MAX));
 
     int result;
     if (p < explRate) {
-        result = maxExpected(&currentState)->second;
+        result = maxExpected(&currentState, possibleActions)->second;
     } else {
-        result = rand() % 4;
+        result = (*possibleActions)[rand() % possibleActions->size()];
     }
+    return result;
 }
 
-int Agent::softMax() {
-    vector<int> actions {};             //stores actions
-    vector<double > softValues {};      //stores weighted softmax values
-    double sum = 0;                     //stores the sum of the softmax values to normalize
-    double v;                           //stores the single value, just a temporal variable
+int Agent::softMax(vector<int> *possibleActions) {
+    vector<int> actions {};
+    vector<double > softValues {};
+    double sum = 0;
+    double v;
 
-    //up
-    pair<int, int> testAt = pair<int, int>{currentState.first - 1, currentState.second};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(0);                   //stores action
-        v = pow(M_E, valueFunction[testAt]);    //calculates the exponential softmax value
-        softValues.push_back(v);                //stores the softmax values
-        sum += v;                               //sum of all exponential functions to normalize the results
-    }
-    //down
-    testAt = pair<int, int>{currentState.first + 1, currentState.second};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(2);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
-    }
-
-    //right
-    testAt = pair<int, int>{currentState.first, currentState.second + 1};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(1);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
-    }
-
-    //left
-    testAt = pair<int, int>{currentState.first, currentState.second - 1};
-    if (valueFunction.keyExists(testAt)) {
-        actions.push_back(3);
-        v = pow(M_E, valueFunction[testAt]);
-        softValues.push_back(v);
-        sum += v;
+    for (int a : *possibleActions) {
+        try {
+            auto testAt = environment.getStateByAction(a);
+            actions.push_back(a);                   //stores action
+            v = pow(M_E, valueFunction[*testAt]);    //calculates the exponential softmax value
+            softValues.push_back(v);                //stores the softmax values
+            sum += v;                               //sum of all exponential functions to normalize the results
+            delete testAt;
+        } catch (int e) {
+            //ignoring 21 errors, throwing all others
+            if(e != 21)  //error 21: invalid action
+                throw e;
+        }
     }
 
     //this loop ensures that the probabilities of the softValues vector add up to one (normalization)
@@ -187,9 +158,7 @@ int Agent::softMax() {
             break;
         }
     }
-
     return action;
-
 }
 
 void Agent::debug() {

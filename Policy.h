@@ -8,7 +8,7 @@
 #include <vector>
 #include <cstdlib>
 #include <cmath>
-#include <agtctl.h>
+//#include <agtctl.h> //crap
 //#include "Agent.h"
 
 using namespace std;

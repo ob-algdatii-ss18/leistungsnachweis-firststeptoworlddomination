@@ -93,10 +93,17 @@ public:
         return rewards.toString();
     }
 
+    vector<int>* getActions();
+
     /*
      * gives the initial state of the agent in the environment
      */
     pair<int, int> *initialState();
+
+    /*
+     * gives back the state corresponding to the result of an action taken from the current agent state
+     */
+    pair<int, int>* getStateByAction(int action);
 };
 
 #endif //WORLDDOMINATION_ENVIRONMENT_H
