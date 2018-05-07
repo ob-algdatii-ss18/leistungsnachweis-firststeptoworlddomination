@@ -5,6 +5,7 @@
 #include "Agent.h"
 #include <cstdlib>
 #include <cmath>
+#include <cfloat>
 #include "gtest/gtest.h"
 
 using namespace std;
@@ -25,14 +26,14 @@ void Agent::fit(int numberOfGames) {
     cout << valueFunction.toString() << endl << endl;
 }
 
-Agent::Agent(double learningRate, double discountRate, double explRate, int policy) {
+Agent::Agent(double learningRate, double discountRate, double explRate, Policy* policy) {
     pair<int, int> size = global_qValueSize;
     this->valueFunction = Num2DTable(size); //@todo get size of game for this
     this->learningRate = learningRate;
     this->discountRate = discountRate;
     this->explRate = explRate;
-    this->policyType = policy;
-    //this->policy = Policy(policyType, this);
+    //this->policyType = policy;
+    this->policy = policy;
 }
 
 void Agent::playGame() {
@@ -41,7 +42,9 @@ void Agent::playGame() {
     vector<int>* possibleActions = environment.getActions();
 
     while (!finished) {
-        int a = choseAction(possibleActions);
+        //cout<<"start"<<endl;
+        int a = policy->chooseAction(*possibleActions, *getValuesByActions(possibleActions));
+        //cout << "action: " << a << endl;
         delete possibleActions;
         //int a = policy.choseAction();
         Environment::Response* response = environment.step(a);
@@ -53,6 +56,7 @@ void Agent::playGame() {
         delete response;
         if(debugFlag)
             cout << valueFunction.toString() << endl << endl;
+        //cout << counter << endl;
     }
     actionCounter.push_back(counter);
 }
@@ -77,9 +81,9 @@ void Agent::updateValueFunction(Environment::Response *response) {
         valueFunction.setQValue(*response->state, response->reward);
 }
 
-//@todo add "possible actions"
+
 pair<double, int> * Agent::maxExpected(pair<int, int> *state, vector<int> *possibleActions) {
-    double maxVal = -100000.0; //@todo ugly thing, since hard coded lower bound
+    double maxVal = -DBL_MAX;
     int action = 0;
 
     for(int a : *possibleActions) {
@@ -100,7 +104,7 @@ pair<double, int> * Agent::maxExpected(pair<int, int> *state, vector<int> *possi
     return new pair<double, int>{maxVal, action};
 }
 
-int Agent::choseAction(vector<int> *possibleActions) {
+int Agent::chooseAction(vector<int> *possibleActions) {
     if(policyType == 0)
         return randomThreshold(possibleActions);
     if(policyType == 1)
@@ -162,4 +166,12 @@ int Agent::softMax(vector<int> *possibleActions) {
 
 void Agent::debug() {
     debugFlag = !debugFlag;
+}
+
+vector<double> *Agent::getValuesByActions(vector<int> *possibleActions) {
+    auto result = new vector<double>{};
+    for(auto a : *possibleActions) {
+        result->push_back(valueFunction[*environment.getStateByAction(a)]);
+    }
+    return result;
 }

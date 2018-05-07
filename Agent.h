@@ -10,7 +10,7 @@
 #include "Environment.h"
 #include "Num2DTable.h"
 #include "gtest/gtest.h"
-//#include "Policy.h"
+#include "Policy.h"
 
 
 using namespace std;
@@ -28,7 +28,7 @@ class Agent {
     vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
     double explRate; //exploiting rate
     int policyType = 0; //policy for chosing actions
-    //Policy policy;
+    Policy* policy;
 
 public:
     /*
@@ -38,7 +38,7 @@ public:
      * @param explRate: probability of choosing a random action
      * @param policy: strategy for choosing next action
      */
-    Agent(double learningRate, double discountRate, double explRate, int policy);
+    Agent(double learningRate, double discountRate, double explRate, Policy* policy);
 
     /*
      * lets the agent learn from a given number of games
@@ -74,7 +74,7 @@ private:
      * strategy by which the agent choses his next action
      * @param possibleActions: actions to chose from
      */
-    int choseAction(vector<int> *possibleActions);
+    int chooseAction(vector<int> *possibleActions);
 
     /*
      * gives back the maximal expected reward from a state given in a response
@@ -91,12 +91,14 @@ private:
      * implementation of a softmax evaluation of the actions
      */
     int softMax(vector<int> *possibleActions);
+
+    vector<double> *getValuesByActions(vector<int> *possibleActions);
 };
 
 class ValueAgent : Agent {
 
 public:
-    ValueAgent (double learningRate, double discountRate, double explRate, int policy) : Agent (learningRate, discountRate, explRate, policy) {
+    ValueAgent (double learningRate, double discountRate, double explRate, Policy* policy) : Agent (learningRate, discountRate, explRate, policy) {
 
     }
 
