@@ -24,10 +24,7 @@ class Agent {
     pair<int, int> currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
     double discountRate; //how much value is given to future rewards
-    int environmentType;//not needed for now but will be as soon as we have different environments
     vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
-    double explRate; //exploiting rate
-    int policyType = 0; //policy for chosing actions
     Policy* policy;
 
 public:
