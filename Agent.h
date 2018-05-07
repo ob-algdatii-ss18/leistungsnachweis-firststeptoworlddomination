@@ -33,8 +33,10 @@ class Agent {
 public:
     /*
      * constructor
-     * @param learningRate
-     * @param discountRate
+     * @param learningRate: alpha
+     * @param discountRate: gamma
+     * @param explRate: probability of choosing a random action
+     * @param policy: strategy for choosing next action
      */
     Agent(double learningRate, double discountRate, double explRate, int policy);
 
@@ -53,11 +55,13 @@ private:
 
     /*
      * updates q-values
+     * @param: response of the environment
      */
     void updateQValueFunction(Environment::Response *response);
 
     /*
      * update value function
+     * @param: response of the environment
      */
     void updateValueFunction(Environment::Response *response);
 
@@ -68,11 +72,13 @@ private:
 
     /*
      * strategy by which the agent choses his next action
+     * @param possibleActions: actions to chose from
      */
     int choseAction(vector<int> *possibleActions);
 
     /*
      * gives back the maximal expected reward from a state given in a response
+     * @param response: position
      */
     pair<double, int>* maxExpected(pair<int, int> *response, vector<int> *possibleActions);
 

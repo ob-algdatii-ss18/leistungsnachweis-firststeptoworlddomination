@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <cmath>
 #include "gtest/gtest.h"
-//#include <rpcdcep.h>
 
 using namespace std;
 
