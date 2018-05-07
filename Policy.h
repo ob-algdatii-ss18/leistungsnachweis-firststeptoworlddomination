@@ -63,6 +63,10 @@ public:
 class ThresholdPolicy : public Policy {
     double explRate = 0.8;
 
+    /*
+     * gives back the maximal expected reward from a state given in a response
+     * @param response: position
+     */
     pair<double, int> * maxExpected(vector<int> possibleActions, vector<double> values) {
         double maxVal = -DBL_MAX;
         int action = 0;
@@ -81,7 +85,6 @@ public:
     ThresholdPolicy(double explRate) : explRate(explRate) {}
 
     int chooseAction(vector<int> possibleActions, vector<double> numValues) {
-        //cout << "chose action" << endl;
 
         double p = ((double) rand() / (RAND_MAX));
 
@@ -91,7 +94,6 @@ public:
         } else {
             result = possibleActions[rand() % possibleActions.size()];
         }
-        //cout << "final value: " << result << endl;
         return result;
     }
 };

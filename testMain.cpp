@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Agent agent = Agent(0.1, 0.8, 0.8, 1);
+Agent agent = Agent(0.1, 0.8, 1, nullptr);
 pair<int, int> *initialState;
 // up, right, down, left
 double values[4] = {0,1,2,3};

@@ -71,3 +71,8 @@ pair<int, int> *Environment::getStateByAction(int action) {
     return result;
 }
 
+void Environment::reset() {
+    playingGround = {pair<int, int>{3, 4}, {1, 1, 1, -1, 1, 0, 1, -1, 1, 1, 1, 1}}; //current play ground
+    agentPosition = pair<int, int>{2, 0};
+}
+

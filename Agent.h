@@ -20,7 +20,7 @@ class Agent {
     friend class Policy;
 
     Num2DTable valueFunction; //values of the Agent (actually right now it's just a value function)
-    Environment environment; //environment the agent lives in
+    Environment* environment; //environment the agent lives in
     pair<int, int> currentState; //current state the agent is in
     double learningRate; //how fast he adopts to things he sees
     double discountRate; //how much value is given to future rewards
@@ -38,7 +38,7 @@ public:
      * @param explRate: probability of choosing a random action
      * @param policy: strategy for choosing next action
      */
-    Agent(double learningRate, double discountRate, double explRate, Policy* policy);
+    Agent(double learningRate, double discountRate, Policy *policy, Environment *env);
 
     /*
      * lets the agent learn from a given number of games
@@ -57,7 +57,7 @@ private:
      * updates q-values
      * @param: response of the environment
      */
-    void updateQValueFunction(Environment::Response *response);
+    //void updateQValueFunction(Environment::Response *response);
 
     /*
      * update value function
@@ -70,39 +70,24 @@ private:
      */
     void playGame();
 
-    /*
-     * strategy by which the agent choses his next action
-     * @param possibleActions: actions to chose from
-     */
-    int chooseAction(vector<int> *possibleActions);
-
-    /*
-     * gives back the maximal expected reward from a state given in a response
-     * @param response: position
-     */
-    pair<double, int>* maxExpected(pair<int, int> *response, vector<int> *possibleActions);
-
-    /*
-     * Chooses an action with fixed probablility for random action
-     */
-    int randomThreshold(vector<int> *possibleActions);
-
-    /*
-     * implementation of a softmax evaluation of the actions
-     */
-    int softMax(vector<int> *possibleActions);
-
     vector<double> *getValuesByActions(vector<int> *possibleActions);
+
+    void saveAgent(){
+        //@todo
+    }
+
+    Agent* loadAgent() {
+        //@todo
+    }
 };
 
 class ValueAgent : Agent {
 
 public:
-    ValueAgent (double learningRate, double discountRate, double explRate, Policy* policy) : Agent (learningRate, discountRate, explRate, policy) {
+    ValueAgent (double learningRate, double discountRate, Policy* policy, Environment* env) :
+            Agent(learningRate, discountRate, policy, env) {
 
     }
-
-
 
 };
 

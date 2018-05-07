@@ -7,8 +7,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    Policy* policy = new SoftMaxPolicy();
-    Agent a = Agent(0.1, 0.8, 0.8, policy);
+    Agent a = Agent(0.1, 0.8, new SoftMaxPolicy(), new Environment());
     a.fit(1000);
     cout << "main done" << endl;
     return 0;
