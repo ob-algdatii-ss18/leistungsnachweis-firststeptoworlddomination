@@ -59,7 +59,7 @@ public:
         values[getIndex(index)] = value;
     }
 
-    // needed for google tests
+    // TODO maybe needed for google tests
     void setQValues(pair<int, int> *agentIndex, double values[]){
         //up
         setQValue({agentIndex->first-1, agentIndex->second},values[0]);

@@ -7,15 +7,16 @@
 
 #include <iostream>
 #include <vector>
+#include "gtest/gtest.h"
 #include "Environment.h"
 #include "Num2DTable.h"
-#include "gtest/gtest.h"
 #include "Policy.h"
 
 
 using namespace std;
 
 class Agent {
+    FRIEND_TEST(AgentTest, ChooseActionOfMaxValue);
 
     friend class Policy;
 
@@ -46,9 +47,6 @@ public:
     void debug();
 
 private:
-    FRIEND_TEST(AgentTest, FirstMaxValueMustBeZero);
-    FRIEND_TEST(AgentTest, HigherMaxValueOnRightSide);
-
 
     /*
      * updates q-values
