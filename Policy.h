@@ -48,8 +48,8 @@ public:
 
         double p = ((double) rand() / (RAND_MAX));
         int action = 0;//default value that will never be returned
-        double summedP = 0; //this values gieves the combined probability distribution for the actions
-        //this loop choses the action based on an random value p and the softmax distribution.
+        double summedP = 0; //this value gives the combined probability distribution for the actions
+        //this loop chooses the action based on an random value p and the softmax distribution.
         for (int i = 0; i < softValues.size(); i++) {
             summedP += softValues[i];
             if (p < summedP) {
@@ -62,13 +62,21 @@ public:
 };
 
 class ThresholdPolicy : public Policy {
-    double explRate = 0.8;
+    FRIEND_TEST(AgentTest, GetMaxValueOf4PossibleActions_4);
+    FRIEND_TEST(AgentTest, GetMaxValueOf4PossibleActions_5);
+    FRIEND_TEST(AgentTest, GetMaxValueOf3PossibleActions_4);
+    FRIEND_TEST(AgentTest, GetMaxValueOf3PossibleActions_5);
+    FRIEND_TEST(AgentTest, GetMaxValueOf1PossibleAction_0);
+
+
+    double explRate; // = 0.8;
 
     /*
-     * gives back the maximal expected reward from a state given in a response
-     * @param response: position
-     */
-    pair<double, int> * maxExpected(vector<int> possibleActions, vector<double> values) {
+* gives back the maximal expected reward from a state given in a response
+* @param response: position
+*/
+
+    pair<double, int>* maxExpected(vector<int> possibleActions, vector<double> values) {
         double maxVal = -DBL_MAX;
         int action = 0;
 
@@ -85,10 +93,12 @@ public:
 
     ThresholdPolicy(double explRate) : explRate(explRate) {}
 
+    // TODO explRate = 1 sollte gar keine Random Actions machen?
+    // TODO Wie testen mit rand().. immer anders, Werte in Debug Modus strange
     int chooseAction(vector<int> possibleActions, vector<double> numValues) {
 
         double p = ((double) rand() / (RAND_MAX));
-
+        // cout << p << endl;
         int result;
         if (p < explRate) {
             result = maxExpected(possibleActions, numValues)->second;
@@ -97,6 +107,7 @@ public:
         }
         return result;
     }
+
 };
 
 #endif //WORLDDOMINATION_POLICY_H

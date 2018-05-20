@@ -16,7 +16,7 @@
 using namespace std;
 
 class Agent {
-    FRIEND_TEST(AgentTest, ChooseActionOfMaxValue);
+    friend class AgentTest;
 
     friend class Policy;
 
