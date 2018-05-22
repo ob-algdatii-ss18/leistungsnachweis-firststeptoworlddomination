@@ -93,14 +93,13 @@ public:
 
     ThresholdPolicy(double explRate) : explRate(explRate) {}
 
-    // TODO explRate = 1 sollte gar keine Random Actions machen?
     // TODO Wie testen mit rand().. immer anders, Werte in Debug Modus strange
     int chooseAction(vector<int> possibleActions, vector<double> numValues) {
 
         double p = ((double) rand() / (RAND_MAX));
         // cout << p << endl;
         int result;
-        if (p < explRate) {
+        if (p <= explRate) {
             result = maxExpected(possibleActions, numValues)->second;
         } else {
             result = possibleActions[rand() % possibleActions.size()];

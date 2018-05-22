@@ -65,6 +65,9 @@ private:
      */
     void playGame();
 
+    FRIEND_TEST(AgentTest, GetValuesByPossibleActions_012);
+    FRIEND_TEST(AgentTest, GetValuesByPossibleActions_123);
+
     vector<double> *getValuesByActions(vector<int> *possibleActions);
 
     void saveAgent(){

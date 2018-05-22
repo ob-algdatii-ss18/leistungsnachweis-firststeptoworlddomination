@@ -7,6 +7,8 @@
 
 #include <vector>
 #include "Num2DTable.h"
+#include "gtest/gtest.h"
+
 
 
 using namespace std;

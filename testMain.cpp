@@ -28,7 +28,8 @@ struct AgentTest : public testing::Test
         agentPolicy = (ThresholdPolicy*) agent->policy;
         valueFunction = agent->valueFunction;
         environment = agent->environment;
-        environment->agentPosition = pair<int, int>{1, 1};
+        environment->agentPosition = pair<int, int>{1, 2};
+        //agent->currentState = pair<int, int>{1, 2};
     }
     void TearDown()
     {
@@ -106,32 +107,38 @@ TEST_F(AgentTest, GetMaxValueOf1PossibleAction_0)
 
 // -----------------------------------------------------------------------------
 
-TEST_F(AgentTest, GetStateByValidAction_0)
+TEST_F(AgentTest, GetStateByValidAction_UP)
 {
-    pair<int, int> *expected = new pair<int, int> {0, 1};
+    pair<int, int> *expected = new pair<int, int> {0, 2};
     pair<int, int> *actual = environment->getStateByAction(0);
     EXPECT_EQ(*expected, *actual);
+    delete expected;
+    delete actual;
 }
 
-TEST_F(AgentTest, GetStateByValidAction_1)
+TEST_F(AgentTest, GetStateByValidAction_RIGHT)
 {
-    pair<int, int> *expected = new pair<int, int> {1, 2};
+    pair<int, int> *expected = new pair<int, int> {1, 3};
     pair<int, int> *actual = environment->getStateByAction(1);
     EXPECT_EQ(*expected, *actual);
+    delete expected;
+    delete actual;
 }
 
-TEST_F(AgentTest, GetStateByValidAction_2)
+TEST_F(AgentTest, GetStateByValidAction_DOWN)
 {
-    pair<int, int> *expected = new pair<int, int> {2, 1};
+    pair<int, int> *expected = new pair<int, int> {2, 2};
     pair<int, int> *actual = environment->getStateByAction(2);
     EXPECT_EQ(*expected, *actual);
+    delete expected;
+    delete actual;
 }
 
-TEST_F(AgentTest, GetStateByValidAction_3)
+// Blocked field
+TEST_F(AgentTest, GetStateByInvalidAction_LEFT)
 {
-    pair<int, int> *expected = new pair<int, int> {1, 0};
-    pair<int, int> *actual = environment->getStateByAction(3);
-    EXPECT_EQ(*expected, *actual);
+    //pair<int, int> *expected = new pair<int, int> {1, 1};
+    ASSERT_ANY_THROW(environment->getStateByAction(3));
 }
 
 // -----------------------------------------------------------------------------
@@ -140,20 +147,139 @@ TEST_F(AgentTest, GetStateByValidAction_3)
 
 // -----------------------------------------------------------------------------
 
-TEST_F(AgentTest, StepUp)
+TEST_F(AgentTest, StepIntoNormalField_UP)
 {
-    // {1, 3} because no more options after I went one up from (1,1)
-    vector<int> *actions = new vector<int>{1, 3};
-    pair<int, int> *agentPos = new pair<int, int> {0, 1};
+    // up, right, down, left
+    // options after agent moved
+    vector<int> *actions = new vector<int>{1, 2, 3};
+    pair<int, int> *agentPos = new pair<int, int> {0, 2};
+    // Response(pair<int, int> *state, vector<int> options, double reward, bool finished) {
     Environment::Response* expected = new Environment::Response(agentPos, *actions, 0, false);
     Environment::Response* actual = environment->step(0);
-    // TODO overload operator ==
-    //EXPECT_EQ(*expected, *actual);
     EXPECT_EQ(*expected->state, *actual->state);
     EXPECT_EQ(expected->options, actual->options);
     EXPECT_EQ(expected->reward, actual->reward);
     EXPECT_EQ(expected->finished, actual->finished);
+    delete expected;
+    delete actual;
+    delete actions;
+    delete agentPos;
+}
 
+TEST_F(AgentTest, StepIntoNegativeField_RIGHT)
+{
+    vector<int> *actions = new vector<int>{0, 2, 3};
+    pair<int, int> *agentPos = new pair<int, int> {1, 3};
+    Environment::Response* expected = new Environment::Response(agentPos, *actions, -1, true);
+    Environment::Response* actual = environment->step(1);
+    EXPECT_EQ(*expected->state, *actual->state);
+    EXPECT_EQ(expected->options, actual->options);
+    EXPECT_EQ(expected->reward, actual->reward);
+    EXPECT_EQ(expected->finished, actual->finished);
+    delete expected;
+    delete actual;
+    delete actions;
+    delete agentPos;
+}
+
+TEST_F(AgentTest, StepIntoNormalField_DOWN)
+{
+    vector<int> *actions = new vector<int>{0, 1, 3};
+    pair<int, int> *agentPos = new pair<int, int> {2, 2};
+    Environment::Response* expected = new Environment::Response(agentPos, *actions, 0, false);
+    Environment::Response* actual = environment->step(2);
+    EXPECT_EQ(*expected->state, *actual->state);
+    EXPECT_EQ(expected->options, actual->options);
+    EXPECT_EQ(expected->reward, actual->reward);
+    EXPECT_EQ(expected->finished, actual->finished);
+    delete expected;
+    delete actual;
+    delete actions;
+    delete agentPos;
+}
+
+// TODO why does validPosition work in getStateByAction??
+TEST_F(AgentTest, StepIntoBlockedField_LEFT)
+{
+    vector<int> *actions = new vector<int>{0, 1, 2};
+    pair<int, int> *agentPos = new pair<int, int> {1, 2};
+    Environment::Response* expected = new Environment::Response(agentPos, *actions, 0, false);
+    Environment::Response* actual = environment->step(3);
+    EXPECT_EQ(*expected->state, *actual->state);
+    EXPECT_EQ(expected->options, actual->options);
+    EXPECT_EQ(expected->reward, actual->reward);
+    EXPECT_EQ(expected->finished, actual->finished);
+    delete expected;
+    delete actual;
+    delete actions;
+    delete agentPos;
+}
+
+TEST_F(AgentTest, Go2StepsIntoPositiveField_UP_RIGHT)
+{
+    vector<int> *actions = new vector<int>{2, 3};
+    pair<int, int> *agentPos = new pair<int, int> {0, 3};
+    Environment::Response* expected = new Environment::Response(agentPos, *actions, 1, true);
+    environment->step(0);
+    Environment::Response* actual = environment->step(1);
+    EXPECT_EQ(*expected->state, *actual->state);
+    EXPECT_EQ(expected->options, actual->options);
+    EXPECT_EQ(expected->reward, actual->reward);
+    EXPECT_EQ(expected->finished, actual->finished);
+    delete expected;
+    delete actual;
+    delete actions;
+    delete agentPos;
+}
+
+// TODO why no exception in validPosition in getStateByAction?
+TEST_F(AgentTest, Go2StepsIntoWall_UP_UP)
+{
+    vector<int> *actions = new vector<int>{1, 2, 3};
+    pair<int, int> *agentPos = new pair<int, int> {0, 2};
+    Environment::Response* expected = new Environment::Response(agentPos, *actions, 0, false);
+    environment->step(0);
+    //environment->agentPosition = pair<int, int>{0, 2};
+    Environment::Response* actual = environment->step(0);
+    //ASSERT_ANY_THROW(environment->step(0));
+    EXPECT_EQ(*expected->state, *actual->state);
+    EXPECT_EQ(expected->options, actual->options);
+    EXPECT_EQ(expected->reward, actual->reward);
+    EXPECT_EQ(expected->finished, actual->finished);
+    delete expected;
+    delete actual;
+    delete actions;
+    delete agentPos;
+}
+
+// -----------------------------------------------------------------------------
+
+// Agent::getValuesByActions
+
+// -----------------------------------------------------------------------------
+
+// Friend_Test in Agent private
+// TODO Ergebnis ist {0, 0, 0} whyyyy?
+TEST_F(AgentTest, GetValuesByPossibleActions_012){
+    vector<double> *expected = new vector<double>{0,-1,0};
+    vector<int> *possibleActions = new vector<int>{0, 1, 2};
+    vector<double> *actual = agent->getValuesByActions(possibleActions);
+    EXPECT_EQ(*expected, *actual);
+    delete expected;
+    delete actual;
+    delete possibleActions;
+}
+
+// TODO Ergebnis ist {0, 0, 0} whyyyy?
+TEST_F(AgentTest, GetValuesByPossibleActions_123){
+    environment->step(0);
+    vector<double> *expected = new vector<double>{1,0,0};
+    vector<int> *possibleActions = new vector<int>{1, 2, 3};
+    vector<double> *actual = agent->getValuesByActions(possibleActions);
+    EXPECT_EQ(*expected, *actual);
+    delete expected;
+    delete actual;
+    delete possibleActions;
 }
 
 
