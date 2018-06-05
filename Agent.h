@@ -54,6 +54,8 @@ private:
      */
     //void updateQValueFunction(Environment::Response *response);
 
+    FRIEND_TEST(AgentTest, UpdateValueFunction);
+
     /*
      * update value function
      * @param: response of the environment
@@ -65,8 +67,7 @@ private:
      */
     void playGame();
 
-    FRIEND_TEST(AgentTest, GetValuesByPossibleActions_012);
-    FRIEND_TEST(AgentTest, GetValuesByPossibleActions_123);
+    FRIEND_TEST(AgentTest, GetValuesByPossibleActions);
 
     vector<double> *getValuesByActions(vector<int> *possibleActions);
 

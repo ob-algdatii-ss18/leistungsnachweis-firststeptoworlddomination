@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 using namespace std;
 
@@ -51,24 +52,36 @@ public:
         return values[getIndex(index)];
     }
 
+    bool operator==(const Num2DTable& rhs) const {
+       // return shape == rhs.shape && values == rhs.values;
+
+        if (values.size() != rhs.values.size()){
+            cout << "\nSize does not match" <<endl;
+            return false;
+        }
+        if (shape.first != rhs.shape.first || shape.second != rhs.shape.second){
+            return false;
+        }
+        for (int i = 0; i < values.size(); i++){
+            if( fabs(values[i] - rhs.values[i]) > 0.00000001 ){
+                cout.precision(17);
+                cout << "First wrong value at index " << i << ": " << fixed << values[i] << " and " << rhs.values[i] <<"\n" << endl;
+                return false;
+            }
+        }
+        return true;
+        }
+
+/*    bool operator!=(const Num2DTable& rhs) const {
+        return !(*this == rhs);
+    }*/
+
     /*void operator(const pair<int,int> index, values) {
         values[getIndex(index)] = value;
     }*/
 
     void setQValue(pair<int, int> index, double value) {
         values[getIndex(index)] = value;
-    }
-
-    // TODO maybe needed for google tests
-    void setQValues(pair<int, int> agentIndex, vector<double> values){
-        //up
-        setQValue({agentIndex.first-1, agentIndex.second},values[0]);
-        //right
-        setQValue({agentIndex.first, agentIndex.second+1},values[1]);
-        //down
-        setQValue({agentIndex.first+1, agentIndex.second},values[2]);
-        //left
-        setQValue({agentIndex.first, agentIndex.second-1},values[3]);
     }
 
     bool keyExists(pair<int, int> indexPair) {
