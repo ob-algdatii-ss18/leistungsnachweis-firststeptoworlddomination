@@ -19,17 +19,17 @@ struct AgentTest : public testing::Test
     Agent *agent;
     ThresholdPolicy *agentPolicy;
     //pair<int, int> initState;
-    Num2DTable valueFunction;
+    //Num2DTable valueFunction;
     Environment *environment;
     void SetUp()
     {
         agent = new Agent(0.1, 0.8, new ThresholdPolicy(0.8), new Environment());
         //initState = pair<int, int>{1, 1};
         agentPolicy = (ThresholdPolicy*) agent->policy;
-        valueFunction = agent->valueFunction;
+        agent->valueFunction = Num2DTable{{3,4}, {0,0,3,0, 0,0,0,0, 0,0,1,0}};
         environment = agent->environment;
         environment->agentPosition = pair<int, int>{1, 2};
-        //agent->currentState = pair<int, int>{1, 2};
+        agent->currentState = pair<int, int>{1, 2};
     }
     void TearDown()
     {
@@ -61,7 +61,6 @@ TEST_F(AgentTest, GetMaxValueOf4PossibleActions_5)
     // up, right, down, left
     vector<int> possibleActions {0, 1, 2, 3};
     vector<double> values {1, 5, 3, 4};
-    //valueFunction.setQValues(initState, values);
     double expected = 5;
     double actual = agentPolicy->maxExpected(possibleActions, values)->first;
     EXPECT_EQ(expected, actual);
@@ -73,7 +72,6 @@ TEST_F(AgentTest, GetMaxValueOf3PossibleActions_4)
     // up, right, down
     vector<int> possibleActions {0, 1, 2};
     vector<double> values {1, 4, 3};
-    //valueFunction.setQValues(initState, values);
     double expected = 4;
     double actual = agentPolicy->maxExpected(possibleActions, values)->first;
     EXPECT_EQ(expected, actual);
@@ -84,7 +82,6 @@ TEST_F(AgentTest, GetMaxValueOf3PossibleActions_5)
     // up, left
     vector<int> possibleActions {0, 3};
     vector<double> values {5, 1, 3};
-    //valueFunction.setQValues(initState, values);
     double expected = 5;
     double actual = agentPolicy->maxExpected(possibleActions, values)->first;
     EXPECT_EQ(expected, actual);
@@ -95,7 +92,6 @@ TEST_F(AgentTest, GetMaxValueOf1PossibleAction_0)
     // up
     vector<int> possibleActions {0};
     vector<double> values {0};
-    //valueFunction.setQValues(initState, values);
     double expected = 0;
     double actual = agentPolicy->maxExpected(possibleActions, values)->first;
     EXPECT_EQ(expected, actual);
@@ -153,7 +149,6 @@ TEST_F(AgentTest, StepIntoNormalField_UP)
     // options after agent moved
     vector<int> *actions = new vector<int>{1, 2, 3};
     pair<int, int> *agentPos = new pair<int, int> {0, 2};
-    // Response(pair<int, int> *state, vector<int> options, double reward, bool finished) {
     Environment::Response* expected = new Environment::Response(agentPos, *actions, 0, false);
     Environment::Response* actual = environment->step(0);
     EXPECT_EQ(*expected->state, *actual->state);
@@ -198,7 +193,6 @@ TEST_F(AgentTest, StepIntoNormalField_DOWN)
     delete agentPos;
 }
 
-// TODO why does validPosition work in getStateByAction??
 TEST_F(AgentTest, StepIntoBlockedField_LEFT)
 {
     vector<int> *actions = new vector<int>{0, 1, 2};
@@ -232,16 +226,13 @@ TEST_F(AgentTest, Go2StepsIntoPositiveField_UP_RIGHT)
     delete agentPos;
 }
 
-// TODO why no exception in validPosition in getStateByAction?
 TEST_F(AgentTest, Go2StepsIntoWall_UP_UP)
 {
     vector<int> *actions = new vector<int>{1, 2, 3};
     pair<int, int> *agentPos = new pair<int, int> {0, 2};
     Environment::Response* expected = new Environment::Response(agentPos, *actions, 0, false);
     environment->step(0);
-    //environment->agentPosition = pair<int, int>{0, 2};
     Environment::Response* actual = environment->step(0);
-    //ASSERT_ANY_THROW(environment->step(0));
     EXPECT_EQ(*expected->state, *actual->state);
     EXPECT_EQ(expected->options, actual->options);
     EXPECT_EQ(expected->reward, actual->reward);
@@ -259,29 +250,55 @@ TEST_F(AgentTest, Go2StepsIntoWall_UP_UP)
 // -----------------------------------------------------------------------------
 
 // Friend_Test in Agent private
-// TODO Ergebnis ist {0, 0, 0} whyyyy?
-TEST_F(AgentTest, GetValuesByPossibleActions_012){
-    vector<double> *expected = new vector<double>{0,-1,0};
+TEST_F(AgentTest, GetValuesByPossibleActions){
+    vector<double> *expected = new vector<double>{3, 0, 1};
     vector<int> *possibleActions = new vector<int>{0, 1, 2};
     vector<double> *actual = agent->getValuesByActions(possibleActions);
     EXPECT_EQ(*expected, *actual);
-    delete expected;
-    delete actual;
-    delete possibleActions;
-}
 
-// TODO Ergebnis ist {0, 0, 0} whyyyy?
-TEST_F(AgentTest, GetValuesByPossibleActions_123){
     environment->step(0);
-    vector<double> *expected = new vector<double>{1,0,0};
-    vector<int> *possibleActions = new vector<int>{1, 2, 3};
-    vector<double> *actual = agent->getValuesByActions(possibleActions);
+    expected = new vector<double>{0, 0, 0};
+    possibleActions = new vector<int>{1, 2, 3};
+    actual = agent->getValuesByActions(possibleActions);
     EXPECT_EQ(*expected, *actual);
+
+    environment->step(3);
+    expected = new vector<double>{3, 0};
+    possibleActions = new vector<int>{1, 3};
+    actual = agent->getValuesByActions(possibleActions);
+    EXPECT_EQ(*expected, *actual);
+
     delete expected;
     delete actual;
     delete possibleActions;
 }
 
+// -----------------------------------------------------------------------------
+
+// Agent::updateValueFunction
+
+// -----------------------------------------------------------------------------
+
+// Friend_Test in Agent private
+TEST_F(AgentTest, UpdateValueFunction) {
+
+    // move up
+    Environment::Response* response = environment->step(0);
+    agent->updateValueFunction(response);
+    double value_12 = 0 + 0.1 * (0 + 0.8 * 3 - 0);
+    agent->currentState = pair<int,int>(*response->state);
+    Num2DTable expected = Num2DTable{{3,4}, {0,0,3,0, 0,0,value_12,0, 0,0,1,0}};
+    EXPECT_EQ(agent->valueFunction, expected);
+
+    // move right
+    response = environment->step(1);
+    agent->updateValueFunction(response);
+    double value_02 = 3 + 0.1 * (1 + 0.8 * 0 - 3);
+    expected = Num2DTable{{3,4}, {0,0,value_02,1, 0,0,value_12,0, 0,0,1,0}};
+    EXPECT_EQ(agent->valueFunction, expected);
+
+    delete response;
+}
 
 // -----------------------------------------------------------------------------
 
