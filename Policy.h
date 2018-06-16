@@ -64,6 +64,7 @@ public:
 class ThresholdPolicy : public Policy {
     double explRate = 0.8;
 
+public:
     /*
      * gives back the maximal expected reward from a state given in a response
      * @param response: position
