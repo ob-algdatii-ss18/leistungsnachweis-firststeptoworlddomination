@@ -7,6 +7,8 @@
 
 #include <vector>
 #include "Num2DTable.h"
+#include "gtest/gtest.h"
+
 
 
 using namespace std;
@@ -14,7 +16,7 @@ using namespace std;
 static const pair<int, int> global_qValueSize = {3, 4};//@todo this is nasty crap
 
 class Environment {
-
+friend class AgentTest;
 
     vector<Num2DTable> gameRecord {}; //the game is stored here as a replay
     vector<int> actionRecord {};//actions taken by the agent are stored here
@@ -45,6 +47,18 @@ public:
             this->reward = reward;
             this->finished = finished;
         }
+
+/*        bool MyClass::operator!=(const Environment::Response &other) const {
+            return !(*this == other);
+        }*/
+
+/*        friend bool operator==(const Response &lhs, const Response &rhs) {
+            return (lhs.state == rhs.state) && (lhs.options == rhs.options) && (lhs.reward == rhs.reward) && (lhs.finished == rhs.finished);
+        }
+
+        friend bool operator!=(const Response &lhs, const Response &rhs) {
+            return !(lhs == rhs);
+        }*/
 
         /*
          * generates formated string of the response object

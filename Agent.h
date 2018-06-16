@@ -16,7 +16,7 @@
 using namespace std;
 
 class Agent {
-    FRIEND_TEST(AgentTest, ChooseActionOfMaxValue);
+    friend class AgentTest;
 
     friend class Policy;
 
@@ -54,6 +54,8 @@ private:
      */
     //void updateQValueFunction(Environment::Response *response);
 
+    FRIEND_TEST(AgentTest, UpdateValueFunction);
+
     /*
      * update value function
      * @param: response of the environment
@@ -64,6 +66,8 @@ private:
      * plays a single game
      */
     void playGame();
+
+    FRIEND_TEST(AgentTest, GetValuesByPossibleActions);
 
     vector<double> *getValuesByActions(vector<int> *possibleActions);
 

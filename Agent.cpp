@@ -81,8 +81,8 @@ void Agent::debug() {
 }
 
 vector<double> *Agent::getValuesByActions(vector<int> *possibleActions) {
-    auto result = new vector<double>{};
-    for(auto a : *possibleActions) {
+    vector<double>* result = new vector<double>{};
+    for(int a : *possibleActions) {
         result->push_back(valueFunction[*environment->getStateByAction(a)]);
     }
     return result;
