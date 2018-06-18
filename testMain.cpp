@@ -1,6 +1,3 @@
-//
-// Created by Jonas on 16.04.2018.
-//
 #include <iostream>
 #include "Agent.h"
 #include <gtest/gtest.h>
