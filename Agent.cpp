@@ -1,6 +1,3 @@
-//
-// Created by jonas on 4/4/18.
-//
 #include <vector>
 #include "Agent.h"
 #include <cstdlib>

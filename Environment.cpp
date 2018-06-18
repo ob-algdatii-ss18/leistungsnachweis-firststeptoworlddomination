@@ -1,7 +1,3 @@
-//
-// Created by jonas on 4/4/18.
-//
-
 #include <iostream>
 #include "Environment.h"
 
@@ -30,9 +26,9 @@ Environment::Response* Environment::step(int action) {
     return new Environment::Response(&agentPosition, *getActions(), rewards[agentPosition], finished);
 }
 
-void Environment::visualizeGame() {
+/*void Environment::visualizeGame() {
     //@todo visualize gameRecord
-}
+}*/
 
 vector<int>* Environment::getActions() {
     vector<int>* actions = new vector<int> {};

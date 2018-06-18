@@ -1,7 +1,3 @@
-//
-// Created by jonas on 4/4/18.
-//
-
 #ifndef WORLDDOMINATION_AGENT_H
 #define WORLDDOMINATION_AGENT_H
 
@@ -20,16 +16,37 @@ class Agent {
 
     friend class Policy;
 
-    Num2DTable valueFunction; //values of the Agent (actually right now it's just a value function)
-    Environment* environment; //environment the agent lives in
-    pair<int, int> currentState; //current state the agent is in
-    double learningRate; //how fast he adopts to things he sees
-    double discountRate; //how much value is given to future rewards
-    vector<int> actionCounter {}; //stores the number of iterations it took the agent to finish the game
+    /**
+     * values of the Agent (actually right now it's just a value function)
+     */
+    Num2DTable valueFunction;
+    /**
+     * environment the agent lives in
+     */
+    Environment* environment;
+    /**
+     * current state the agent is in
+     */
+    pair<int, int> currentState;
+    /**
+     * how fast he adopts to things he sees
+     */
+    double learningRate;
+    /**
+     * how much value is given to future rewards
+     */
+    double discountRate;
+    /**
+     * stores the number of iterations it took the agent to finish the game
+     */
+    vector<int> actionCounter {};
+    /**
+     * the policy the agent uses to decide his next step
+     */
     Policy* policy;
 
 public:
-    /*
+    /**
      * constructor
      * @param learningRate: alpha
      * @param discountRate: gamma
@@ -38,7 +55,7 @@ public:
      */
     Agent(double learningRate, double discountRate, Policy *policy, Environment *env);
 
-    /*
+    /**
      * lets the agent learn from a given number of games
      * @param numberOfGames: number of games he is supposed to play
      */
@@ -56,19 +73,24 @@ private:
 
     FRIEND_TEST(AgentTest, UpdateValueFunction);
 
-    /*
+    /**
      * update value function
      * @param: response of the environment
      */
     void updateValueFunction(Environment::Response *response);
 
-    /*
+    /**
      * plays a single game
      */
     void playGame();
 
     FRIEND_TEST(AgentTest, GetValuesByPossibleActions);
 
+    /**
+     * get values by given actions
+     * @param possibleActions
+     * @return values in order of possible action
+     */
     vector<double> *getValuesByActions(vector<int> *possibleActions);
 
     void saveAgent(){

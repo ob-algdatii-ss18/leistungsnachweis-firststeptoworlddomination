@@ -1,7 +1,3 @@
-//
-// Created by Jonas on 23.04.2018.
-//
-
 #ifndef WORLDDOMINATION_POLICY_H
 #define WORLDDOMINATION_POLICY_H
 
@@ -17,22 +13,34 @@ class Policy {
 
 public:
 
-    Policy(){};
+    Policy() {};
 
+    /**
+    * chooses the next action
+    * @param possibleActions
+    * @param numValues
+    * @return next action
+    */
     virtual int chooseAction(vector<int> possibleActions, vector<double> numValues) {
         cout << "not supposed to be called" << endl;
     };
 
 };
 
+/**
+ * class of Softmax policy as explained in presentation
+ */
 class SoftMaxPolicy : public Policy {
 
 public:
+    /**
+     * default constructor
+     */
     SoftMaxPolicy() = default;
 
     int chooseAction(vector<int> possibleActions, vector<double> numValues) {
         //cout << "chose action" << endl;
-        vector<double > softValues {};
+        vector<double> softValues{};
         double sum = 0;
 
         for (int a = 0; a < possibleActions.size(); a++) {
@@ -61,28 +69,38 @@ public:
     }
 };
 
+/**
+ * class of Threshold (greedy) policy as explained in presentation
+ */
 class ThresholdPolicy : public Policy {
     FRIEND_TEST(AgentTest, GetMaxValueOf4PossibleActions_4);
+
     FRIEND_TEST(AgentTest, GetMaxValueOf4PossibleActions_5);
+
     FRIEND_TEST(AgentTest, GetMaxValueOf3PossibleActions_4);
+
     FRIEND_TEST(AgentTest, GetMaxValueOf3PossibleActions_5);
+
     FRIEND_TEST(AgentTest, GetMaxValueOf1PossibleAction_0);
 
-
+/**
+ * exploration rate
+ */
     double explRate; // = 0.8;
 
 public:
-    /*
-* gives back the maximal expected reward from a state given in a response
-* @param response: position
-*/
 
-    pair<double, int>* maxExpected(vector<int> possibleActions, vector<double> values) {
+    /**
+    * gives back the maximal expected reward from a state given in a response
+    * @param response: position
+    * @return pair of maximal reward and its necessary action
+    */
+    pair<double, int> *maxExpected(vector<int> possibleActions, vector<double> values) {
         double maxVal = -DBL_MAX;
         int action = 0;
 
-        for(int a = 0; a < possibleActions.size(); a++) {
-            if(values[a] > maxVal) {
+        for (int a = 0; a < possibleActions.size(); a++) {
+            if (values[a] > maxVal) {
                 maxVal = values[a];
                 action = possibleActions[a];
             }
@@ -92,9 +110,12 @@ public:
 
 public:
 
+    /**
+     * constructor
+     * @param explRate
+     */
     ThresholdPolicy(double explRate) : explRate(explRate) {}
 
-    // TODO Wie testen mit rand().. immer anders, Werte in Debug Modus strange
     int chooseAction(vector<int> possibleActions, vector<double> numValues) {
 
         double p = ((double) rand() / (RAND_MAX));
