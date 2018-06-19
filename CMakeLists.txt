@@ -5,7 +5,6 @@ set (gtest_SOURCE_DIR "./googletest")
 add_subdirectory(googletest)
 
 include_directories(./googletest/include googletest)
-link_directories(./googletest/lib)
 
 set(CMAKE_CXX_STANDARD 11 )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x") #-larmadillo -lpthread") # #-std=c++11")
