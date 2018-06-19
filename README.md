@@ -1,7 +1,21 @@
+# [Reinforcement Learning](https://github.com/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination)
+[![Build Status](
+https://travis-ci.org/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination.svg?branch=master)] (https://travis-ci.org/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination)
+
 # leistungsnachweis-firststeptoworlddomination
-leistungsnachweis-firststeptoworlddomination created by GitHub Classroom
 
-Implementieren eines einfachen Q-Learning Algorithmus, der aus Interaktion mit einer Umgebung lernt. 
+Implementation of a simple Q-Learning algorithm that learns from interacting with an environment.
 
-Im ersten Schritt implementieren wir ein diskretes deterministisches Modell in einer statischen Umgebung. 
-Das Modell soll dann in einem zweiten Schritt auf eine stochastische Umgebung erweitert werden und, falls der Umfang des Projekts das zu lässt, in einem weiteren Schritt auf eine dynamische Umgebung angepasst werden.
+## Build and test instructions
+
+  - cmake .
+  - cmake --build .
+  - ctest
+
+## Documentation
+
+[https://ob-algdatii-ss18.github.io/leistungsnachweis-firststeptoworlddomination/] (https://ob-algdatii-ss18.github.io/leistungsnachweis-firststeptoworlddomination/)
+
+[https://ob-algdatii-ss18.github.io/leistungsnachweis-mamatofe/](https://ob-algdatii-ss18.github.io/leistungsnachweis-mamatofe/).
+
+
