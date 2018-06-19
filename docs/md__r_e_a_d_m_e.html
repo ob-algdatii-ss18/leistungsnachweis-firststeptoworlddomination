@@ -67,9 +67,13 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p><a href="https://travis-ci.org/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination"></a></p>
 <p>Implementation of a simple Q-Learning algorithm that learns from interacting with an environment.</p>
-<h2>Build and test instructions</h2>
+<h2>How to use</h2>
 <p>Best use with Clion</p><ul>
-<li>run WorldDomination for game</li>
+<li>run WorldDomination for game<ul>
+<li>you can change the amount of games the agent will play by changing the parameter number of "fit" method in main</li>
+<li>you can change the strategy in main when creating the agent by either passing "new SoftMaxPolicy()" (default) or "new <a class="el" href="class_threshold_policy.html">ThresholdPolicy(double explorationrate)</a>. Differences were explained in the presentation (see PowerPoint file in project folder)</li>
+</ul>
+</li>
 <li>run WD_Test for tests</li>
 </ul>
 <h2>Documentation</h2>
