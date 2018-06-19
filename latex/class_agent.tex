@@ -1,0 +1,67 @@
+\hypertarget{class_agent}{}\section{Agent Class Reference}
+\label{class_agent}\index{Agent@{Agent}}
+Inheritance diagram for Agent\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_agent}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_agent_af202a4bd6845d8d2730e492f455785e3}{Agent}} (double learning\+Rate, double discount\+Rate, \mbox{\hyperlink{class_policy}{Policy}} $\ast$policy, \mbox{\hyperlink{class_environment}{Environment}} $\ast$env)
+\item 
+void \mbox{\hyperlink{class_agent_aa5716d6513268b2b5714a46341fb9006}{fit}} (int number\+Of\+Games)
+\item 
+\mbox{\Hypertarget{class_agent_a882df575e73539a3067087437a151b94}\label{class_agent_a882df575e73539a3067087437a151b94}} 
+void {\bfseries debug} ()
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_agent_ada6eaf56009c10f181cfc7b8e9957846}\label{class_agent_ada6eaf56009c10f181cfc7b8e9957846}} 
+class {\bfseries Agent\+Test}
+\item 
+\mbox{\Hypertarget{class_agent_a7c64b6746f2b0b83e6ef1bbdfdd72245}\label{class_agent_a7c64b6746f2b0b83e6ef1bbdfdd72245}} 
+class {\bfseries Policy}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_agent_af202a4bd6845d8d2730e492f455785e3}\label{class_agent_af202a4bd6845d8d2730e492f455785e3}} 
+\index{Agent@{Agent}!Agent@{Agent}}
+\index{Agent@{Agent}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{Agent()}{Agent()}}
+{\footnotesize\ttfamily Agent\+::\+Agent (\begin{DoxyParamCaption}\item[{double}]{learning\+Rate,  }\item[{double}]{discount\+Rate,  }\item[{\mbox{\hyperlink{class_policy}{Policy}} $\ast$}]{policy,  }\item[{\mbox{\hyperlink{class_environment}{Environment}} $\ast$}]{env }\end{DoxyParamCaption})}
+
+constructor 
+\begin{DoxyParams}{Parameters}
+{\em learning\+Rate} & alpha \\
+\hline
+{\em discount\+Rate} & gamma \\
+\hline
+{\em expl\+Rate} & probability of choosing a random action \\
+\hline
+{\em policy} & strategy for choosing next action \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_agent_aa5716d6513268b2b5714a46341fb9006}\label{class_agent_aa5716d6513268b2b5714a46341fb9006}} 
+\index{Agent@{Agent}!fit@{fit}}
+\index{fit@{fit}!Agent@{Agent}}
+\subsubsection{\texorpdfstring{fit()}{fit()}}
+{\footnotesize\ttfamily void Agent\+::fit (\begin{DoxyParamCaption}\item[{int}]{number\+Of\+Games }\end{DoxyParamCaption})}
+
+lets the agent learn from a given number of games 
+\begin{DoxyParams}{Parameters}
+{\em number\+Of\+Games} & number of games he is supposed to play \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Agent.\+h\item 
+Agent.\+cpp\end{DoxyCompactItemize}
