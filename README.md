@@ -1,5 +1,5 @@
 # [Reinforcement Learning](https://github.com/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination)
-[![Build Status](https://travis-ci.org/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination.svg?branch=master)] (https://travis-ci.org/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination)
+[![Build Status](https://travis-ci.org/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination.svg?branch=master)](https://travis-ci.org/ob-algdatii-ss18/leistungsnachweis-firststeptoworlddomination)
 
 # leistungsnachweis-firststeptoworlddomination
 
