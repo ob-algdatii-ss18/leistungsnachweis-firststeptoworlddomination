@@ -17,7 +17,7 @@ add_executable(WorldDomination main.cpp ${SOURCE_FILES})
 add_executable(WD_Test testMain.cpp ${SOURCE_FILES})
 target_link_libraries(WD_Test gtest gtest_main)
 ENABLE_TESTING()
-ADD_TEST(gtest_main WD_Test)
+ADD_TEST(testMain WD_Test)
 
 
 set_target_properties(WorldDomination PROPERTIES LINKER_LANGUAGE CXX)
