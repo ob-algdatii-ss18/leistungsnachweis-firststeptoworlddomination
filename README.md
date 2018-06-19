@@ -5,9 +5,9 @@ Implementation of a simple Q-Learning algorithm that learns from interacting wit
 
 ## Build and test instructions
 
-  - cmake .
-  - cmake --build .
-  - ctest
+Best use with Clion
+- run WorldDomination for game
+- run WD_Test for tests
 
 ## Documentation
 
